@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segmentron</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+    <script src = script.js></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Segmentron</h1>
+        <label for="segment">Enter FASTA Segment</label>
+        <textarea id="segment" rows="6" cols="50"></textarea>
+        
+        <div class="file-container">
+            <p for="upload">Or upload file</label>
+            <input type="file" id="upload">
+            <p>No file chosen</p>
+        </div>
+        
+        <label for="forbidden">Forbidden regions</label>
+        <textarea id="forbidden" rows="6" cols="50"></textarea>
+        
+        <label for="custom">Use custom forbidden regions<input type="checkbox" id="custom"></label>
+        
+        <label for="coarseness">Coarseness</label>
+        <input type="range" id="coarseness" min="1" max="10" value="5">
+        <span id="coarseness-value">5 nucleotides</span>
+        
+        <br>
+        <button type="button" id="findSegments">Find Segments</button>
+
+        <button type="button" id="downloadSegments" disabled>Download Segments</button>
+    </div>
+</body>
+</html>

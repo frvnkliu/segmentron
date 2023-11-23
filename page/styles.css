@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: left; /* Align everything to the left */
+}
+
+.container {
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+h2{
+    width: 85vw;
+    word-wrap:break-word;
+}
+
+label, input, button, p {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input, textarea, button {
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    width: 15%
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.file-container {
+    margin-bottom: 20px;
+}
+
+.file-container label {
+    font-weight: bold;
+}
+
+input[type="file"] + label {
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+input[type="file"] + label:hover {
+    background-color: #0056b3;
+}
+
+span {
+    margin-left: 10px;
+    font-size: 0.8em;
+    color: #666;
+}
+
+.range-container {
+    margin-bottom: 20px;
+}
+
+.range-container label {
+    font-weight: bold;
+}
+
+input[type="range"] {
+    width: calc(40%);
+}
+
+#coarseness-value {
+    font-size: 1em;
+    font-weight: bold;
+    color: #007bff;
+}
+
+label {
+    font-weight: bold;
+    font-size: 1.2em; /* Increased font size */
+}

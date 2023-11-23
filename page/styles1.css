@@ -1,0 +1,10 @@
+.container {
+    margin: 20px;
+}
+label, input, button, p, span {
+    display: inline-block;
+    vertical-align: middle;
+}
+.file-container, .range-container {
+    margin-bottom: 10px;
+}
