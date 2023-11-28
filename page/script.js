@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", async function () {
  });
 
 
- const segmentronCode =
- `
+const segmentronCode =
+`
 def find_repeated_subsequences(input_string, window_size):
 # Dictionary to store substrings, their counts, and positions
     substring_info = {}  
