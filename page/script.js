@@ -2,10 +2,11 @@
 
 let pyodideLoaded = false;
 let pyodide;
+var segmented;
 var file;
-var content;
+//var content;
 
-async function main() {
+async function loadPackages() {
     pyodide = await loadPyodide();
 
     //Imports with Micropip
@@ -32,46 +33,48 @@ function readFileAsync(file) {
         reader.onerror = (error) => {
             reject(error);
         };
-
-        reader.readAsText(file);
+        reader.readAsArrayBuffer(file);
     });
 }
 
 async function segmentFile(){
-    content = await readFileAsync(file);
-    pyodide.FS.writeFile("/sequence.dna", content);
-    //console.log("JavaScript file content:", content);
-    /*const pythonCode = `
-import js
-with open("/test.txt", "r") as fh:
-    data = fh.read()
-print(data)
-with open("/segmentation.txt", "w") as fh:
-    fh.write(data + "Segmented")
-`;*/
-
-
+    const content = await readFileAsync(file);
+    const uint8ArrayContent = new Uint8Array(content);
+    pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
     await pyodide.runPythonAsync(segmentronCode);
 
+    segmented = true;
     document.getElementById("downloadSegments").disabled = false;
+    document.getElementById("downloadSegments").classList.remove("disabledButton");
+    document.getElementById("status").innerHTML = "Segmentation Finished!";
     alert("Segments are ready!");
 }
 
 
 function downloadSegments() {
-    let file = pyodide.FS.readFile("/segmentation.txt", { encoding: "utf8" });
-    const blob = new Blob([file],  {typ: "text/plain"});
-    const a = document.createElement("a");
+    if(!segmented){
+        alert("Please wait for segmentation to finish");
+        return;
+    }
+
+    const fileName = file.name.split(".")[0];
+    var content = pyodide.FS.readFile("/segmentation.bed");
+    var blob = new Blob([content],  {type: "application/octet-stream"});
+    var a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "segmentation.txt";
+    a.download = `${fileName}_segmentation.bed`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-}
 
-
-function segmentSequence(){
-
+    content = pyodide.FS.readFile("/segmentation.txt");
+    blob = new Blob([content],  {type: "text/plain"});
+    a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${fileName}_segmentation.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 function segment(){
@@ -90,6 +93,9 @@ function segment(){
     if (file) {
         // File is selected, you can perform further actions
         console.log("Selected file:", file);
+        document.getElementById("findSegments").style.display = 'none';
+        document.getElementById("downloadSegments").style.display  = 'block';
+        document.getElementById("status").innerHTML = "Calculating Optimal Segmentation... (Please Wait, May Take a While)";
         segmentFile();
         // Here you can read the content of the file or perform other operations
     } else {
@@ -105,13 +111,15 @@ function segment(){
 document.addEventListener("DOMContentLoaded", async function () {
     // Wait for the DOM content to be fully loaded
     // Add an event listener to the "Find Segments" button
-    document.getElementById("findSegments").addEventListener("click", segment);
-    document.getElementById("downloadSegments").addEventListener("click", downloadSegments);
-    await main();
-
+    const segmentButton = document.getElementById("findSegments");
+    segmentButton.addEventListener("click", segment);
+    const downloadButton = document.getElementById("downloadSegments")
+    downloadButton.addEventListener("click", downloadSegments);
+    await loadPackages();
     pyodideLoaded = true;
-
-   
+    var fileInput = document.getElementById("upload");
+    document.getElementById("status").innerHTML = "Ready!";
+    segmentButton.classList.remove("disabledButton");
  });
 
 
@@ -859,6 +867,8 @@ if __name__ == "__main__":
     filepath = "/sequence.dna"
     total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_region_classes = 1, multiprocessing_cores = 0, coarseness = 1)
     segmenter.print_results()
-    segmenter.write_subsequences_to_txt("segmentation.txt")
-    segmenter.write_segments_to_bed("segmentation.bed")
+    segmenter.write_subsequences_to_txt("/segmentation.txt")
+    print("Written to segmentation.txt")
+    segmenter.write_segments_to_bed("/segmentation.bed")
+    print("Written to segmentation.bed")
  `;

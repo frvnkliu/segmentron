@@ -12,29 +12,31 @@
 <body>
     <div class="container">
         <h1>Segmentron</h1>
+
+        <h2>Step 1</h2>
         <label for="segment">Enter FASTA Segment</label>
-        <textarea id="segment" rows="6" cols="50"></textarea>
-        
+        <textarea id="segment" rows="6" cols="50" disabled = "true"></textarea>
+        <p>Or</p>
         <div class="file-container">
-            <p for="upload">Or upload file</label>
+            <label for="upload" multiple = "false" accept=".dna">Upload file</label>
             <input type="file" id="upload">
-            <p>No file chosen</p>
         </div>
         
+        <!--
         <label for="forbidden">Forbidden regions</label>
         <textarea id="forbidden" rows="6" cols="50"></textarea>
+        -->
         
-        <label for="custom">Use custom forbidden regions<input type="checkbox" id="custom"></label>
+        <!--<label for="custom">Use custom forbidden regions<input type="checkbox" id="custom"></label>-->
         <!--
         <label for="coarseness">Coarseness</label>
         <input type="range" id="coarseness" min="1" max="10" value="5">
         <span id="coarseness-value">5 nucleotides</span>
         -->
-        
-        <br>
-        <button type="button" id="findSegments">Find Segments</button>
+        <p id = "status">Importing Python Libraries...</p>
+        <button type="button" id="findSegments" class = "disabledButton">Submit</button>
 
-        <button type="button" id="downloadSegments" disabled>Download Segments</button>
+        <button type="button" id="downloadSegments" class = "disabledButton">Download</button>
     </div>
 </body>
 </html>
