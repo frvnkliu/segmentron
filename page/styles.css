@@ -12,11 +12,38 @@ body {
     height: 80%;
 }
 
+#links {
+    margin-bottom: 20px;
+}
 
+a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+.contentTable li {
+    margin-bottom: 10px; /* Add space between list items */
+}
+
+.contentTable a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 1.2em; /* Increase font size */
+}
+
+.contentTable a:hover {
+    color: #0056b3;
+}
 
 h1 {
     font-size: 2em;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 h2{
@@ -118,7 +145,7 @@ label {
 }
 
 .hidden{
-    display: none;
+    /*display: none;*/
 }
 
 .disabledButton{

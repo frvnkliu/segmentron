@@ -12,15 +12,18 @@
 <body>
     <div class="container">
         <h1>Segmentron</h1>
+        <div id = links>
+            <a href="~">Segmentron</a> <a href="~/help">Help</a> <a href="~/help">About</a>
+        </div>
         <div id = "importSection">
+            <h2>Step 1</h2>
             <div class="file-container">
-                <h2>Step 1</h2>
                 <label for="upload">Upload file ⓘ</label> 
                 <span class="tooltip">ⓘ Supported file types: .dna, .txt</span>
-                <input type="file" id="upload" accept= ".dna" title="Supported file types: .dna">
-                <button type="button" id="findSegments">Submit</button>
+                <input type="file" id="upload" accept= ".dna" title="Supported file types: .dna"> 
             </div>
-            <p>Need Help? <a href = "help#sequence">Sequence File Guide</a></p>
+            <button type="button" id="findSegments">Submit</button>
+            <p>Need Help? <a href = "help#sequence" target="_blank">Sequence File Guide</a></p>
         </div>
 
         <div id = "segmentSection" class = "hidden">
@@ -36,6 +39,7 @@
                 <option value="txt">TXT Format (.txt)</option>
             </select>
             <button type="button" id="downloadButton">Download</button>
+            <p>Need Help? <a href = "help#output" target="_blank">Output File Guide</a></p>
         </div>
         <p id = "status">Importing Python Libraries...</p>
 
