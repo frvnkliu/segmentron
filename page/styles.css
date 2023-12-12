@@ -145,7 +145,7 @@ label {
 }
 
 .hidden{
-    /*display: none;*/
+    display: none;
 }
 
 .disabledButton{
