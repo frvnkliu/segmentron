@@ -12,31 +12,32 @@
 <body>
     <div class="container">
         <h1>Segmentron</h1>
+        <div id = "importSection">
+            <div class="file-container">
+                <h2>Step 1</h2>
+                <label for="upload">Upload file ⓘ</label> 
+                <span class="tooltip">ⓘ Supported file types: .dna, .txt</span>
+                <input type="file" id="upload" accept= ".dna, .txt" title="Supported file types: .dna, .txt">
+                <button type="button" id="findSegments">Submit</button>
+            </div>
+        </div>
 
-        <h2>Step 1</h2>
-        <label for="segment">Enter FASTA Segment</label>
-        <textarea id="segment" rows="6" cols="50" disabled = "true"></textarea>
-        <p>Or</p>
-        <div class="file-container">
-            <label for="upload" multiple = "false" accept=".dna">Upload file</label>
-            <input type="file" id="upload">
+        <div id = "segmentSection" class = "hidden">
+            <h2>Step 2</h2>
+            <img src="loadingCat.gif" alt="Loading Cat">
         </div>
         
-        <!--
-        <label for="forbidden">Forbidden regions</label>
-        <textarea id="forbidden" rows="6" cols="50"></textarea>
-        -->
-        
-        <!--<label for="custom">Use custom forbidden regions<input type="checkbox" id="custom"></label>-->
-        <!--
-        <label for="coarseness">Coarseness</label>
-        <input type="range" id="coarseness" min="1" max="10" value="5">
-        <span id="coarseness-value">5 nucleotides</span>
-        -->
+        <div id = "downloadSection" class = "hidden" >
+            <h2>Step 3</h2>
+            <label for="exportFormat">Export Type:</label>
+            <select id="exportFormat">
+                <option value="bed">BED Format (.bed)</option>
+                <option value="txt">TXT Format (.txt)</option>
+            </select>
+            <button type="button" id="downloadButton">Download</button>
+        </div>
         <p id = "status">Importing Python Libraries...</p>
-        <button type="button" id="findSegments" class = "disabledButton">Submit</button>
 
-        <button type="button" id="downloadSegments" class = "disabledButton">Download</button>
     </div>
 </body>
 </html>

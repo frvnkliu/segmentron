@@ -9,6 +9,7 @@ body {
     background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 80%;
 }
 
 
@@ -55,6 +56,14 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+img {
+    width: 40%; /* Set the width of the image to 60% */
+    height: auto; /* Maintain the aspect ratio */
+    display: block; /* Make it a block-level element to control margins */
+    margin: 0 auto; /* Center the image horizontally */
+    margin-top: 20px; /* Add some top margin */
 }
 
 .file-container {
@@ -108,10 +117,6 @@ label {
     font-size: 1.2em; /* Increased font size */
 }
 
-#downloadSegments{
-   display: none;
-}
-
 .hidden{
     display: none;
 }
@@ -126,4 +131,33 @@ label {
 
 #status{
     color:#007bff;
+}
+
+
+.file-container {
+    position: relative;
+}
+
+.tooltip {
+    position: absolute;
+    display: none;
+    padding: 0.5em;
+    background-color: #333;
+    color: #fff;
+    border-radius: 0.25em;
+  }
+
+.file-container label:hover + .tooltip {
+    display: block;
+}
+
+#downloadSection select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#downloadSection button{
+    margin-top: 10px;
 }

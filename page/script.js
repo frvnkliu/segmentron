@@ -16,10 +16,6 @@ async function loadPackages() {
     await micropip.install("snapgene_reader");
     await micropip.install("typing");
     await micropip.install("Bio");
-    //Need to create package for our code 
-    const calculateButton = document.getElementById('Calculate');
-    const input1 = document.getElementById('input1'); // Replace with actual IDs
-    const resultElement = document.getElementById('result'); // Replace with actual ID
 }
 
 function readFileAsync(file) {
@@ -42,42 +38,55 @@ async function segmentFile(){
     const uint8ArrayContent = new Uint8Array(content);
     pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
     await pyodide.runPythonAsync(segmentronCode);
-
-    segmented = true;
-    document.getElementById("downloadSegments").disabled = false;
-    document.getElementById("downloadSegments").classList.remove("disabledButton");
-    document.getElementById("status").innerHTML = "Segmentation Finished!";
-    alert("Segments are ready!");
 }
 
 
-function downloadSegments() {
+function downloadSegmentsTxt(){
     if(!segmented){
         alert("Please wait for segmentation to finish");
         return;
     }
-
     const fileName = file.name.split(".")[0];
-    var content = pyodide.FS.readFile("/segmentation.bed");
-    var blob = new Blob([content],  {type: "application/octet-stream"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${fileName}_segmentation.bed`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    content = pyodide.FS.readFile("/segmentation.txt");
-    blob = new Blob([content],  {type: "text/plain"});
-    a = document.createElement("a");
+    const content = pyodide.FS.readFile("/segmentation.txt");
+    const blob = new Blob([content],  {type: "text/plain"});
+    const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `${fileName}_segmentation.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+}
+function downloadSegmentsBed() {
+    if(!segmented){
+        alert("Please wait for segmentation to finish");
+        return;
+    }
+    // Split into multiple download buttons
+    const fileName = file.name.split(".")[0];
+    const content = pyodide.FS.readFile("/segmentation.bed");
+    const blob = new Blob([content],  {type: "application/octet-stream"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${fileName}_segmentation.bed`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
-function segment(){
+function downloadSegments(){
+    const exportType = document.getElementById('exportFormat').value;
+    switch(exportType){
+        case "bed":
+            downloadSegmentsBed();
+            break;
+        case "txt":
+            downloadSegmentsTxt();
+            break;
+    }
+}
+
+async function segment(){
     if (!pyodideLoaded) {
         // Pyodide is not yet loaded, display a message or handle it appropriately
         alert("Please wait for Pyodide and packages to be loaded.");
@@ -88,16 +97,20 @@ function segment(){
 
     // Get the selected file
     file = fileInput.files[0];
-    var fastaSegment = document.getElementById("segment").value;
+    //var fastaSegment = document.getElementById("segment").value;
 
     if (file) {
         // File is selected, you can perform further actions
         console.log("Selected file:", file);
-        document.getElementById("findSegments").style.display = 'none';
-        document.getElementById("downloadSegments").style.display  = 'block';
+        document.getElementById("importSection").classList.add("hidden");
         document.getElementById("status").innerHTML = "Calculating Optimal Segmentation... (Please Wait, May Take a While)";
-        segmentFile();
-        // Here you can read the content of the file or perform other operations
+        document.getElementById("segmentSection").classList.remove("hidden");
+        await segmentFile();
+        segmented = true;
+        document.getElementById("segmentSection").classList.add("hidden");
+        document.getElementById("downloadSection").classList.remove("hidden");
+        document.getElementById("status").innerHTML = "Segmentation Finished!";
+        alert("Segments are ready!");
     } else {
         // No file is selected
         if (!fastaSegment.trim()) {
@@ -113,7 +126,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Add an event listener to the "Find Segments" button
     const segmentButton = document.getElementById("findSegments");
     segmentButton.addEventListener("click", segment);
-    const downloadButton = document.getElementById("downloadSegments")
+
+    const downloadButton = document.getElementById("downloadButton");
     downloadButton.addEventListener("click", downloadSegments);
     await loadPackages();
     pyodideLoaded = true;
@@ -121,7 +135,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("status").innerHTML = "Ready!";
     segmentButton.classList.remove("disabledButton");
  });
-
 
 const segmentronCode =
 `
