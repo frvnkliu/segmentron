@@ -16,6 +16,7 @@ async function loadPackages() {
     await micropip.install("snapgene_reader");
     await micropip.install("typing");
     await micropip.install("Bio");
+    await micropip.install("https://test-files.pythonhosted.org/packages/9b/c2/20c374253e8754b48ab2ba7d14f97e408e0aa3ff4aa3a8580f51219762d0/Segmentron-8.0.0-py3-none-any.whl");
 }
 
 function readFileAsync(file) {
@@ -37,7 +38,7 @@ async function segmentFile(){
     const content = await readFileAsync(file);
     const uint8ArrayContent = new Uint8Array(content);
     pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
-    await pyodide.runPythonAsync(segmentronCode);
+    pyodide.runPythonAsync(segmentronCode2);
 }
 
 
@@ -135,6 +136,43 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("status").innerHTML = "Ready!";
     segmentButton.classList.remove("disabledButton");
  });
+
+const segmentronCode2 = 
+`
+from Segmentron import function_list
+from Segmentron import segmentron_v8 as segmentron
+`
+
+const segmentronCode1 = 
+`
+from Bio.Blast import NCBIWWW
+from Bio.Blast import NCBIXML
+
+def run_blast(query_sequence, database='nr', num_results=10):
+    result_handle = NCBIWWW.qblast("blastp", database, query_sequence, alignments=num_results)
+    blast_record = NCBIXML.read(result_handle)
+    return blast_record
+
+def print_blast_results(blast_record):
+    for alignment in blast_record.alignments:
+        print(f"*** Alignment: {alignment.title} ***")
+        for hsp in alignment.hsps:
+            print(f"E-value: {hsp.expect}")
+            print(f"Identity: {hsp.identities}/{hsp.align_length} ({hsp.identities / hsp.align_length * 100:.2f}%)")
+            print(f"Query: {hsp.query}")
+            print(f"Subject: {hsp.sbjct}")
+            print()
+
+if __name__ == "__main__":
+    # Replace the sequence below with your own protein sequence
+    query_sequence = "MKTIIALSYIFCLVTGGLTLIGNILISLVVIVRFAKMKKLR"
+    
+    # Run BLAST
+    blast_result = run_blast(query_sequence)
+    
+    # Print results
+    print_blast_results(blast_result)
+`
 
 const segmentronCode =
 `

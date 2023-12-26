@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: segmentron-regevlab
+Version: 9.0.1
+Summary: Python Package for optimal segmentation of a DNA sequence
+Author: Frank Liu, Nicholas Wang, Antonio Vela Gartner, Oded Regev
+Author-email: frankliu@nyu.edu
+Project-URL: Homepage, https://github.com/frvnkliu/segmentron
+Project-URL: Issues, https://github.com/frvnkliu/segmentron/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown

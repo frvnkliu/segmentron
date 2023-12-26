@@ -1,0 +1,21 @@
+[project]
+name = "segmentron_regevlab"
+version = "9.0.1"
+authors = [
+  { name = "Frank Liu", email="frankliu@nyu.edu" },
+  { name = "Nicholas Wang", email="nyw2006@nyu.edu" },
+  { name = "Antonio Vela Gartner", email = "Antonio.VelaGartner@nyulangone.org"},
+  { name = "Oded Regev", email = "regev@cims.nyu.edu"}
+]
+description = "Python Package for optimal segmentation of a DNA sequence"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/frvnkliu/segmentron"
+Issues = "https://github.com/frvnkliu/segmentron/issues"
