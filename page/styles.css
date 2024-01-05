@@ -188,3 +188,31 @@ label {
 #downloadSection button{
     margin-top: 10px;
 }
+
+
+
+#parameterSelectors {
+    text-align: left; /* Reset text alignment */
+}
+
+#parameterSelectors div {
+    vertical-align: top; /* Align the divs to the top */
+    display: inline-block;
+    margin-right: 10px; /* Optional: Add some spacing between the divs */
+    text-align: center;
+}
+
+#parameterSelectors input{
+    display: block; /* Center the input elements within the div */
+    margin: 0 auto; /* Center the input elements horizontally */
+}
+
+#parameterSelectors label {
+    font-weight: bold;
+    font-size: 0.8em;
+    margin-right: 5px;
+}
+
+#parameterSection {
+    margin-bottom: 20px; /* Add some bottom margin to create space below the parameterSection */
+}

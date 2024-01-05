@@ -15,6 +15,7 @@
         <div id = links>
             <a href="https://frvnkliu.github.io/segmentron/">Segmentron</a> <a href="help">Help</a> <a href="about">About</a>
         </div>
+
         <div id = "importSection">
             <h2>Step 1</h2>
             <div class="file-container">
@@ -22,9 +23,21 @@
                 <span class="tooltip">ⓘ Supported file types: .dna, .txt</span>
                 <input type="file" id="upload" accept= ".dna" title="Supported file types: .dna"> 
             </div>
+            <div id = "parameterSection">
+                <label for="parameterSelectors">Advanced</label>
+                <div id="parameterSelectors">
+                    <div><label>BLAST</label><input type="checkbox" id="blastCheckbox" value="BLAST"></div>
+                    <div><label>GC Count</label> <input type="checkbox" id="gcCountCheckbox" value="GC_Count"></div>
+                    <div><label>Function 1</label> <input type="checkbox" id="function1Checkbox" value="Function1"> </div>
+                    <div><label>Function 2</label><input type="checkbox" id="function2Checkbox" value="Function2"> </div>
+                    <div><label>Maximum Length</label><input type="text" id="maxLen" value="MaxLen"> </div>
+                    <div><label>Microhoology Length</label><input type="text" id="MicroLen" value="MicroLen"> </div>
+                </div>
+            </div>
             <button type="button" id="findSegments">Submit</button>
             <p>Need Help? <a href = "help#sequence" target="_blank">Sequence File Guide</a></p>
         </div>
+
 
         <div id = "segmentSection" class = "hidden">
             <h2>Step 2</h2>

@@ -34,6 +34,29 @@ function readFileAsync(file) {
     });
 }
 
+function getParameters() {
+    // Get the values from the input elements within the parameter section
+    var blastValue = document.getElementById("blastCheckbox").checked;
+    var gcCountValue = document.getElementById("gcCountCheckbox").checked;
+    var function1Value = document.getElementById("function1Checkbox").checked;
+    var function2Value = document.getElementById("function2Checkbox").checked;
+    var maxLenValue = document.getElementById("maxLen").value;
+    var microLenValue = document.getElementById("MicroLen").value;
+
+    // Create a map with ID as key and corresponding values
+    var parameterValues = new Map([
+        ["blastCheckbox", blastValue],
+        ["gcCountCheckbox", gcCountValue],
+        ["function1Checkbox", function1Value],
+        ["function2Checkbox", function2Value],
+        ["maxLen", maxLenValue],
+        ["MicroLen", microLenValue]
+    ]);
+
+    // Return the map
+    return parameterValues;
+}
+
 async function segmentFile(){
     const content = await readFileAsync(file);
     const uint8ArrayContent = new Uint8Array(content);
@@ -120,7 +143,8 @@ async function segment(){
             return; // Stop further execution
         }
     }
-}
+
+
 
 document.addEventListener("DOMContentLoaded", async function () {
     // Wait for the DOM content to be fully loaded
