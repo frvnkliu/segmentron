@@ -1,13 +1,10 @@
 [project]
-name = "segmentron_regevlab"
-version = "9.0.1"
+name = "Segmentron"
+version = "9.0.0"
 authors = [
-  { name = "Frank Liu", email="frankliu@nyu.edu" },
-  { name = "Nicholas Wang", email="nyw2006@nyu.edu" },
-  { name = "Antonio Vela Gartner", email = "Antonio.VelaGartner@nyulangone.org"},
-  { name = "Oded Regev", email = "regev@cims.nyu.edu"}
+  { name="Nicholas Wang", email="nyw2006@nyu.edu" },
 ]
-description = "Python Package for optimal segmentation of a DNA sequence"
+description = "Function to calculate the set of smaller segments that can be used to combine to a given target DNA sequence."
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -15,7 +12,3 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
-[project.urls]
-Homepage = "https://github.com/frvnkliu/segmentron"
-Issues = "https://github.com/frvnkliu/segmentron/issues"
