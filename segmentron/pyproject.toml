@@ -1,6 +1,6 @@
 [project]
 name = "Segmentron"
-version = "9.0.3"
+version = "9.0.4"
 authors = [
   { name="Nicholas Wang", email="nyw2006@nyu.edu" },
 ]

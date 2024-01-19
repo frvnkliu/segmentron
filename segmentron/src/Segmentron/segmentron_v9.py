@@ -2,8 +2,8 @@ import snapgene_reader as sgreader
 import math
 from typing import List, Callable
 from tqdm import tqdm
-import function_list_preprocessing as preprocessing
-import function_list_scoring as scoring
+from . import function_list_preprocessing as preprocessing
+from . import function_list_scoring as scoring
 from multiprocessing.managers import SharedMemoryManager
 import time
 from tqdm.contrib.concurrent import process_map
