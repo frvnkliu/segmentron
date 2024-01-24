@@ -26,12 +26,14 @@
             <div id = "parameterSection">
                 <label for="parameterSelectors">Advanced</label>
                 <div id="parameterSelectors">
-                    <div><label>BLAST</label><input type="checkbox" id="blastCheckbox" value="BLAST"></div>
-                    <div><label>GC Count</label> <input type="checkbox" id="gcCountCheckbox" value="GC_Count"></div>
-                    <div><label>Function 1</label> <input type="checkbox" id="function1Checkbox" value="Function1"> </div>
-                    <div><label>Function 2</label><input type="checkbox" id="function2Checkbox" value="Function2"> </div>
-                    <div><label>Maximum Length</label><input type="text" id="maxLen" value="MaxLen"> </div>
-                    <div><label>Microhoology Length</label><input type="text" id="MicroLen" value="MicroLen"> </div>
+                    <div><label>BLAST</label><input type="checkbox" name= "blast" unchecked></div>
+                    <div><label>GC Count</label> <input type="checkbox" name = "GCCount" unchecked></div>
+                    <div><label>MaxLength</label><input type="text" name="maxLen" value="3000"> </div>
+                    <div><label>Min Length</label><input type="text" name="minLen" value= "1000"> </div>
+                    <div><label>Overlap</label><input type="text" name="overlap" value= "100"> </div>
+                    <div><label>Microhomology Distance</label><input type="text" name="microDist" value="20"> </div>
+                    <div><label>Min Microhomology Length</label><input type="text" name="minMicroLen" value="8"> </div>
+                    <div><label>Max Microhomology Length</label><input type="text" name="maxMicroLen" value="19"> </div>
                 </div>
             </div>
             <button type="button" id="findSegments">Submit</button>

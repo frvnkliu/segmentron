@@ -8,6 +8,7 @@ from multiprocessing.managers import SharedMemoryManager
 import time
 from tqdm.contrib.concurrent import process_map
 
+
 class segmentron:
     #Define stored variable types
     #Preprocessing functions that will be used to collect important information before dynamic programming begins
