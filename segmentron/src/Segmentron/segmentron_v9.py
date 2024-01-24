@@ -2,9 +2,8 @@ import snapgene_reader as sgreader
 import math
 from typing import List, Callable
 from tqdm import tqdm
-import function_list_preprocessing as preprocessing
-import function_list_scoring as scoring
-from multiprocessing.managers import SharedMemoryManager
+from . import function_list_preprocessing as preprocessing
+from . import function_list_scoring as scoring
 import time
 from tqdm.contrib.concurrent import process_map
 
@@ -143,7 +142,8 @@ class segmentron:
         #Set up multiprocessing
         smm = None
         #Set up dynamic programming arrays for optimal scores
-        if (multiprocessing_cores > 0):
+        #This was removed since SMM cannot function on webassembly
+        """if (multiprocessing_cores > 0):
             smm = SharedMemoryManager()
             smm.start()
             #Store scores for the optimal segmentations for any subsequence starting from index 0
@@ -152,42 +152,42 @@ class segmentron:
             #For each index, only the last cut is stored to save space
             #The full segmentation can be obtained recursively
             self.optimal_cuts = smm.ShareableList([None for i in range(sequence_length + 1)])
-        else:
-            #Store scores for the optimal segmentations for any subsequence starting from index 0
-            self.optimal_scores = [None for i in range(sequence_length + 1)]
-            #Store optimal segmentation for any subsequence starting from index 0
-            self.optimal_cuts = [None for i in range(sequence_length + 1)]
-            #Set up progress bar using tqdm
-            progress_bar = tqdm(desc = "indices completed: ", total = (sequence_length // coarseness) + 1)
+        else:"""
+        #Store scores for the optimal segmentations for any subsequence starting from index 0
+        self.optimal_scores = [None for i in range(sequence_length + 1)]
+        #Store optimal segmentation for any subsequence starting from index 0
+        self.optimal_cuts = [None for i in range(sequence_length + 1)]
+        #Set up progress bar using tqdm
+        progress_bar = tqdm(desc = "indices completed: ", total = (sequence_length // coarseness) + 1)
         #Set up base case of an empty sequence
         self.optimal_scores[0] = 0
         self.optimal_cuts[0] = 0
         #Iterate over the rest of the sequence
         #If multiprocessing is used, use built in TQDM functions to create a multiprocessing pool to perform the dynamic programming
-        if (multiprocessing_cores > 0):
+        """if (multiprocessing_cores > 0):
             #If coarseness > 1, certain indices will be skipped which will reduce runtime by a factor of about coarseness^2
             args = [current_index for current_index in range(0, sequence_length + 1, coarseness)]
             args.append(sequence_length)
             process_map(self.segment_subsequence, args, chunksize = math.floor(self.parameters["min_length"] / (multiprocessing_cores)), max_workers = multiprocessing_cores)
         #If only a single process is used, call subfunctions to perform the dynamic programming
-        else:
-            #If coarseness > 1, certain indices will be skipped which will reduce runtime by a factor of about coarseness^2
-            for current_index in range(0, sequence_length + 1, coarseness):
-                #For each index, check previous cases
-                self.segment_subsequence(current_index)
-                #Update progress bar
-                progress_bar.update(1)
-            #Ensure that the entire sequence is sequenced in case it was skipped due to the coarseness setting
-            self.segment_subsequence(sequence_length)
+        else:"""
+        #If coarseness > 1, certain indices will be skipped which will reduce runtime by a factor of about coarseness^2
+        for current_index in range(0, sequence_length + 1, coarseness):
+            #For each index, check previous cases
+            self.segment_subsequence(current_index)
+            #Update progress bar
             progress_bar.update(1)
+        #Ensure that the entire sequence is sequenced in case it was skipped due to the coarseness setting
+        self.segment_subsequence(sequence_length)
+        progress_bar.update(1)
         #Shut down progress_bar and multiprocessing resources
-        if (multiprocessing_cores > 0):
+        """if (multiprocessing_cores > 0):
             #Before shutting down the SharedMemoryManager, store the stored data into a normal list
             self.optimal_cuts = list(self.optimal_cuts)
             self.optimal_scores = list(self.optimal_scores)
             smm.shutdown
-        else:
-            progress_bar.close()
+        else:"""
+        progress_bar.close()
         #Store segmentation for possible future operations
         self.segmentation = []
         current_index = sequence_length

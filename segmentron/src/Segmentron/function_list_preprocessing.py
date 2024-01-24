@@ -1,7 +1,7 @@
 import math
 from tqdm import tqdm
-import Preprocessing_Microhomology_Finder_v2 as Preprocessing_Microhomology_Finder
-import Preprocessing_Repeat_Finder_v2 as Preprocessing_Repeat_Finder
+from . import Preprocessing_Microhomology_Finder_v2 as Preprocessing_Microhomology_Finder
+from . import Preprocessing_Repeat_Finder_v2 as Preprocessing_Repeat_Finder
 
 #Preprocessing function to check every interval of length "overlap" in the sequence and store the number of G's or C's included
 def GC_proportions(parameters):

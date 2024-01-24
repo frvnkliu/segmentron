@@ -1,6 +1,5 @@
 import math
 from tqdm import tqdm
-import Preprocessing_Microhomology_Finder_v2
 
 #Scoring function that scores a segment's length based off of Antonio's code
 #Returns a positive value instead of a negative value so smaller values are preferred
