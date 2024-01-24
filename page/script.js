@@ -32,7 +32,7 @@ end_time = time.time()
 elapsed_time = end_time - start_time
 
 print(f"Finished import in {elapsed_time} seconds")
-
+start_time = time.time()
 segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, scoring.overlap_composition_score, scoring.forbidden_region_class_score, scoring.microhomology_score]
 preprocessing_functions = [preprocessing.GC_proportions]
 parameters = {
@@ -78,7 +78,6 @@ function getParameters() {
         const parameterInput = parameterDiv.querySelector("input");
         parameterValues[parameterInput["name"]] = parameterInput.type === "checkbox" ? parameterInput.checked : parameterInput.value;
     });
-
     // Return the map
     return parameterValues;
 }
@@ -104,8 +103,9 @@ elapsed_time = end_time - start_time
 
 print(f"Finished import in {elapsed_time} seconds")
 
-segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, scoring.overlap_composition_score, scoring.forbidden_region_class_score]
-preprocessing_functions = [preprocessing.GC_proportions]
+start_time = time.time()
+segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, scoring.overlap_composition_score, scoring.forbidden_region_class_score, scoring.microhomology_score]
+preprocessing_functions = [preprocessing.GC_proportions, preprocessing.relevant_microhomologies]
 parameters = {
                 "max_length" : ${param["maxLen"]},
                 "min_length" : ${param["minLen"]},
@@ -121,7 +121,11 @@ total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_regi
 segmenter.print_results()
 segmenter.write_subsequences_to_txt("/segmentation.txt")
 segmenter.write_segments_to_bed("/segmentation.bed")
-segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
+segmenter.write_segments_and_forbidden_regions_to_bed("/segmentation_and_forbidden_regions_multiprocessed.bed")
+end_time = time.time()
+elapsed_time = end_time - start_time
+
+print(f"Finished Segmenting in {elapsed_time} seconds")
 `;
     await pyodide.runPythonAsync(segmentronCode);
 }
@@ -160,11 +164,30 @@ function downloadSegmentsBed() {
     document.body.removeChild(a);
 }
 
+function downloadSegmentsBed2() {
+    if(!segmented){
+        alert("Please wait for segmentation to finish");
+        return;
+    }
+    // Split into multiple download buttons
+    const fileName = file.name.split(".")[0];
+    const content = pyodide.FS.readFile("/segmentation_and_forbidden_regions_multiprocessed.bed");
+    const blob = new Blob([content],  {type: "application/octet-stream"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${fileName}_segmentation_and_forbidden_regions_multiprocessed.bed`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+
 function downloadSegments(){
     const exportType = document.getElementById('exportFormat').value;
     switch(exportType){
         case "bed":
             downloadSegmentsBed();
+            downloadSegmentsBed2();
             break;
         case "txt":
             downloadSegmentsTxt();
