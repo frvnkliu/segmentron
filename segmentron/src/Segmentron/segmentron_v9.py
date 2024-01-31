@@ -6,7 +6,7 @@ from . import function_list_preprocessing as preprocessing
 from . import function_list_scoring as scoring
 import time
 from tqdm.contrib.concurrent import process_map
-
+import json
 
 class segmentron:
     #Define stored variable types
@@ -63,7 +63,8 @@ class segmentron:
         #Set up storage areas for later use in dynamic programming
         #Set after reading from a file
         self.parameters["sequence"] = ""
-        self.parameters["forbidden_regions"] = []
+        if(self.parameters.get("forbidden_regions") is None):
+            self.parameters["forbidden_regions"] = []
         #Set to store the segmentation for future operations following every segmentation
         self.segmentation = []
 
@@ -77,6 +78,14 @@ class segmentron:
         for segment_scoring_function in self.segment_scoring_functions:
             total_score = self.accumulating_function(total_score, segment_scoring_function(parameters, starting_index, ending_index))
         return total_score
+
+    def encodingJson(self):
+        #encodes the current segmentation
+        return {
+            "forbidden_regions": self.parameters["forbidden_regions"],
+            "optimal_scores": self.optimal_scores,
+            "optimal_cuts": self.optimal_cuts
+        }
     
     #Segment a sequence by reading from a given filepath
     def segment_from_file(self, filepath, forbidden_region_classes = 1, coarseness = 1, multiprocessing_cores = 0):
