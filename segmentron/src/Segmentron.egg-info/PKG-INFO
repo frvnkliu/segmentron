@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Segmentron
-Version: 9.1.0
+Version: 9.2.0
 Summary: Function to calculate the set of smaller segments that can be used to combine to a given target DNA sequence.
 Author-email: Nicholas Wang <nyw2006@nyu.edu>
 Classifier: Programming Language :: Python :: 3
