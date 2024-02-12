@@ -7,7 +7,7 @@ from . import function_list_scoring as scoring
 import time
 import json
 from tqdm.contrib.concurrent import process_map
-
+import json
 
 class segmentron:
     #Define stored variable types
@@ -66,7 +66,8 @@ class segmentron:
         #Set up storage areas for later use in dynamic programming
         #Set after reading from a file
         self.parameters["sequence"] = ""
-        self.parameters["forbidden_regions"] = []
+        if(self.parameters.get("forbidden_regions") is None):
+            self.parameters["forbidden_regions"] = []
         #Set to store the segmentation for future operations following every segmentation
         self.segmentation = []
 
@@ -96,6 +97,14 @@ class segmentron:
         for segment_scoring_function in self.segment_scoring_functions:
             total_score = self.accumulating_function(total_score, segment_scoring_function(parameters, starting_index, ending_index))
         return total_score
+
+    def encodingJson(self):
+        #encodes the current segmentation
+        return {
+            "forbidden_regions": self.parameters["forbidden_regions"],
+            "optimal_scores": self.optimal_scores,
+            "optimal_cuts": self.optimal_cuts
+        }
     
     #Segment a sequence by reading from a given filepath
     def segment_from_file(self, filepath, forbidden_region_classes = 1, coarseness = 1, multiprocessing_cores = 0):
@@ -384,4 +393,11 @@ if __name__ == "__main__":
     segmenter.write_subsequences_to_txt("segmentation_multiprocessed.txt")
     segmenter.write_segments_to_bed("segmentation_multiprocessed.bed")
     segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
-    segmentron.encodeSegmentron(1)
+    preprocessing_functions.insert(0, preprocessing.forbidden_regions)
+    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring.addition_function, parameters)
+    filepath = "./Hba_Sergio_Test_No_Forbidden_Regions.dna" 
+    total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_region_classes = 1, multiprocessing_cores = 0, coarseness = 1)
+    segmenter.print_results()
+    segmenter.write_subsequences_to_txt("segmentation.txt")
+    segmenter.write_segments_to_bed("segmentation.bed")
+    segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions.bed")
