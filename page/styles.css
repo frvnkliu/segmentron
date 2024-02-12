@@ -216,3 +216,16 @@ label {
 #parameterSection {
     margin-bottom: 20px; /* Add some bottom margin to create space below the parameterSection */
 }
+
+#loading-bar {
+    width: 80%;
+    height: 20px;
+    background-color: #ddd;
+    margin-top: 50px;
+}
+
+#progress-bar {
+    height: 100%;
+    width:50%;
+    background-color: #4caf50;
+}

@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Segmentron</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
-    <script src = script.js></script>
+    <script type ="module" src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script type ="module" src = webworker.js></script>
+    <script type ="module" src = py-worker.js></script>
+    <script type ="module" src = script.js></script>
 </head>
 
 <body>
@@ -36,6 +38,9 @@
                     <div><label>Max Microhomology Length</label><input type="text" name="maxMicroLen" value="19"> </div>
                 </div>
             </div>
+            <!--<div id="loading-bar">
+                <div id="progress-bar"></div>
+            </div>-->
             <button type="button" id="findSegments">Submit</button>
             <p>Need Help? <a href = "help#sequence" target="_blank">Sequence File Guide</a></p>
         </div>
@@ -46,11 +51,12 @@
             <img src="loadingCat.gif" alt="Loading Cat">
         </div>
         
-        <div id = "downloadSection" class = "hidden" >
+        <div id = "downloadSection" class = "hidden">
             <h2>Step 3</h2>
             <label for="exportFormat">Export Type:</label>
             <select id="exportFormat">
                 <option value="bed">BED Format (.bed)</option>
+                <option value="bedFR">BED Format + Forbidden Regions (.bed)</option>
                 <option value="txt">TXT Format (.txt)</option>
             </select>
             <button type="button" id="downloadButton">Download</button>

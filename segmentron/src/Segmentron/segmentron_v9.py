@@ -5,6 +5,7 @@ from tqdm import tqdm
 from . import function_list_preprocessing as preprocessing
 from . import function_list_scoring as scoring
 import time
+import json
 from tqdm.contrib.concurrent import process_map
 
 
@@ -25,9 +26,8 @@ class segmentron:
     #Stored arrays for usage in dynamic programming
     optimal_scores: List[float]
     optimal_cuts: List[int]
-    #Stored values for usage in dynamic programming
-    optimal_cut: int
-
+    
+    
     def __init__(self, preprocessing_functions, segment_scoring_functions, accumulating_function, parameters):
         """Initializes a segmentron class with a given list of scoring functions, a function to combine these scores, and a set of parameters
         The parameters should be passed as a dictionary and all scoring functions should take a dictionary of parameters as arguments
@@ -60,6 +60,9 @@ class segmentron:
         #Max_microhomology_length is the maximum length for a small microhomology to be recorded
         if (self.parameters.get("max_microhomology_length") is None):
             self.parameters["max_microhomology_length"] = 19
+        
+        if(self.parameters.get("block_size") is None):
+            self.parameters["block_size"] = 10000
         #Set up storage areas for later use in dynamic programming
         #Set after reading from a file
         self.parameters["sequence"] = ""
@@ -67,6 +70,22 @@ class segmentron:
         #Set to store the segmentation for future operations following every segmentation
         self.segmentation = []
 
+    def encodeSegmentron(self, blockIndex):
+        #encodes the current segmentation
+        data = {
+            "parameters": self.parameters,
+            "segmentation": {
+                "segmentation": self.segmentation,
+                "optimal_scores": self.optimal_scores,
+                "optimal_cuts": self.optimal_cuts,
+                "blockIndex": blockIndex
+            }
+        }
+        file_path = "segmentron.json"
+
+        with open(file_path, 'w') as json_file:
+            json.dump(self.to_dict(), json_file)
+    
     #Score a segment using all stored segment scoring functions
     #Parameters input dictionary must contain all necessary parameters for all stored segment scoring functions
     def score_segment(self, parameters, starting_index, ending_index):
@@ -359,18 +378,10 @@ if __name__ == "__main__":
                     "max_microhomology_length" : 19
                 }
     segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring.addition_function, parameters)
-    filepath = "./Hba_Sergio_Test_No_Forbidden_Regions.dna" 
+    filepath = "/Users/frankliu/Documents/Projects/Assembletron/Hba_Sergio_Test.dna" 
     total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_region_classes = 1, multiprocessing_cores = 0, coarseness = 1)
     segmenter.print_results()
     segmenter.write_subsequences_to_txt("segmentation_multiprocessed.txt")
     segmenter.write_segments_to_bed("segmentation_multiprocessed.bed")
     segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
-
-    preprocessing_functions.insert(0, preprocessing.forbidden_regions)
-    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring.addition_function, parameters)
-    filepath = "./Hba_Sergio_Test_No_Forbidden_Regions.dna" 
-    total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_region_classes = 1, multiprocessing_cores = 0, coarseness = 1)
-    segmenter.print_results()
-    segmenter.write_subsequences_to_txt("segmentation.txt")
-    segmenter.write_segments_to_bed("segmentation.bed")
-    segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions.bed")
+    segmentron.encodeSegmentron(1)
