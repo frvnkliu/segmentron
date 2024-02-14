@@ -66,10 +66,7 @@ function getParameters() {
     Starts segmentation from a file
 */
 async function segmentFile(){
-    const content = await readFileAsync(file);
-    const uint8ArrayContent = new Uint8Array(content);
-    pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
-    const param = getParameters()
+    const param = getParameters();
     console.log(param);
     const segmentronCode = 
 `import time
@@ -88,7 +85,7 @@ print(f"Finished import in {elapsed_time} seconds")
 
 start_time = time.time()
 segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, scoring.overlap_composition_score, scoring.forbidden_region_class_score, scoring.microhomology_score]
-preprocessing_functions = [preprocessing.GC_proportions, preprocessing.relevant_microhomologies]
+preprocessing_functions = [${param["GCCount"]||true?"preprocessing.GC_proportions, ":""}preprocessing.relevant_microhomologies]
 parameters = {
                 "max_length" : ${param["maxLen"]},
                 "min_length" : ${param["minLen"]},
@@ -121,6 +118,7 @@ async function main() {
             document.getElementById("segmentSection").classList.add("hidden");
             document.getElementById("downloadSection").classList.remove("hidden");
             document.getElementById("status").innerHTML = "Segmentation Finished!";
+            document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
             alert("Segments are ready!");
         } else if (error) {
         console.log("pyodideWorker error: ", error);
@@ -142,7 +140,7 @@ function downloadSegmentsTxt(){
         alert("Please wait for segmentation to finish");
         return;
     }
-    const fileName = file.name.split(".")[0];
+    const fileName = file ? file.name.split(".")[0]: "";
     const content = pyodide.FS.readFile("/segmentation.txt");
     const blob = new Blob([content],  {type: "text/plain"});
     const a = document.createElement("a");
@@ -162,7 +160,7 @@ function downloadSegmentsBed() {
         return;
     }
     // Split into multiple download buttons
-    const fileName = file.name.split(".")[0];
+    const fileName = file ? file.name.split(".")[0]: "";
     const content = pyodide.FS.readFile("/segmentation.bed");
     const blob = new Blob([content],  {type: "application/octet-stream"});
     const a = document.createElement("a");
@@ -182,7 +180,7 @@ function downloadSegmentsBedFR() {
         return;
     }
     // Split into multiple download buttons
-    const fileName = file.name.split(".")[0];
+    const fileName = file ? file.name.split(".")[0]: "";
     const content = pyodide.FS.readFile("/segmentation_and_forbidden_regions_multiprocessed.bed");
     const blob = new Blob([content],  {type: "application/octet-stream"});
     const a = document.createElement("a");
@@ -224,10 +222,11 @@ async function segment(){
     var fileInput = document.getElementById("upload");
 
     // Get the selected file
-    file = fileInput.files[0];
+    
     //var fastaSegment = document.getElementById("segment").value;
 
-    if (file) {
+    if (fileInput.files[0]) {
+        file = fileInput.files[0];
         // File is selected, you can perform further actions
         console.log("Selected file:", file);
         document.getElementById("importSection").classList.add("hidden");
@@ -241,6 +240,8 @@ async function segment(){
             alert("Please enter a FASTA segment.");
             return; // Stop further execution
         }*/
+        alert("Please upload a file");
+
     }
 }
 
@@ -253,6 +254,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const downloadButton = document.getElementById("downloadButton");
     downloadButton.addEventListener("click", downloadSegments);
+
+    const restartButton = document.getElementById("restartButton");
+    restartButton.addEventListener("click", ()=>{
+        document.getElementById("importSection").classList.remove("hidden");
+        document.getElementById("downloadSection").classList.add("hidden");
+    });
     await loadPackages();
     pyodideLoaded = true;
     var fileInput = document.getElementById("upload");

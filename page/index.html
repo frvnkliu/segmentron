@@ -28,7 +28,7 @@
             <div id = "parameterSection">
                 <label for="parameterSelectors">Advanced</label>
                 <div id="parameterSelectors">
-                    <div><label>BLAST</label><input type="checkbox" name= "blast" unchecked></div>
+                    <!--div><label>BLAST</label><input type="checkbox" name= "blast" unchecked></div-->
                     <div><label>GC Count</label> <input type="checkbox" name = "GCCount" unchecked></div>
                     <div><label>MaxLength</label><input type="text" name="maxLen" value="3000"> </div>
                     <div><label>Min Length</label><input type="text" name="minLen" value= "1000"> </div>
@@ -53,6 +53,7 @@
         
         <div id = "downloadSection" class = "hidden">
             <h2>Step 3</h2>
+            <p id = "inputFileName">Text Input</p>
             <label for="exportFormat">Export Type:</label>
             <select id="exportFormat">
                 <option value="bed">BED Format (.bed)</option>
@@ -61,6 +62,8 @@
             </select>
             <button type="button" id="downloadButton">Download</button>
             <p>Need Help? <a href = "help#output" target="_blank">Output File Guide</a></p>
+            <button type="button" id="restartButton">Start Again</button>
+
         </div>
         <p id = "status">Importing Python Libraries...</p>
 
