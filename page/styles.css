@@ -146,7 +146,7 @@ label {
 
 .hidden{
     display: none;
-    background-color: rgb(125, 125, 125);
+    /*background-color: rgb(125, 125, 125);*/
 }
 
 .disabledButton{
@@ -189,8 +189,6 @@ label {
 #downloadSection button{
     margin-top: 10px;
 }
-
-
 
 #parameterSelectors {
     text-align: left; /* Reset text alignment */

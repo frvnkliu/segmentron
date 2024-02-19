@@ -84,8 +84,8 @@ elapsed_time = end_time - start_time
 print(f"Finished import in {elapsed_time} seconds")
 
 start_time = time.time()
-segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, scoring.overlap_composition_score, scoring.forbidden_region_class_score, scoring.microhomology_score]
-preprocessing_functions = [${param["GCCount"]||true?"preprocessing.GC_proportions, ":""}preprocessing.relevant_microhomologies]
+segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, ${param["GCCount"]?"scoring.overlap_composition_score, ":""} scoring.forbidden_region_class_score, scoring.microhomology_score]
+preprocessing_functions = [${param["GCCount"]?"preprocessing.GC_proportions, ":""}preprocessing.relevant_microhomologies]
 parameters = {
                 "max_length" : ${param["maxLen"]},
                 "min_length" : ${param["minLen"]},
