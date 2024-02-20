@@ -115,8 +115,8 @@ async function main() {
             pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
             pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);        
             segmented = true;
-            document.getElementById("segmentSection").classList.add("hidden");
             document.getElementById("downloadSection").classList.remove("hidden");
+            document.getElementById("downloadSection").scrollIntoView({ behavior: 'smooth' });
             document.getElementById("status").innerHTML = "Segmentation Finished!";
             document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
             alert("Segments are ready!");
@@ -229,9 +229,10 @@ async function segment(){
         file = fileInput.files[0];
         // File is selected, you can perform further actions
         console.log("Selected file:", file);
-        document.getElementById("importSection").classList.add("hidden");
+        //document.getElementById("importSection").classList.add("hidden");
         document.getElementById("status").innerHTML = "Calculating Optimal Segmentation... (Please Wait, May Take a While)";
         document.getElementById("segmentSection").classList.remove("hidden");
+        document.getElementById("segmentSection").scrollIntoView({ behavior: 'smooth' });
         segmentFile();
     } else {
         // No file is selected

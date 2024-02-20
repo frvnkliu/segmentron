@@ -1,3 +1,21 @@
+#sections{
+    display: grid;
+    gap: var(--size-3);
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+
+    scroll-snap-type: x mandatory;
+}
+
+#sections > div{
+    scroll-snap-align: center;
+    padding: var(--size-3);
+}
+
+
 body {
     font-family: Helvetica;
     text-align: left; /* Align everything to the left */
