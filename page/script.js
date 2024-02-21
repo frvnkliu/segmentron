@@ -107,7 +107,7 @@ elapsed_time = end_time - start_time
 
 print(f"Finished Segmenting in {elapsed_time} seconds")
 json.dumps(segmenter.encodingJson())`;
-async function main() {
+async function startWebWorkerSegment() {
     try {
         const startTime = performance.now();
         
@@ -137,7 +137,7 @@ async function main() {
         );
     }
 }
-main();
+startWebWorkerSegment();
 }
 
 /*
@@ -220,7 +220,7 @@ function downloadSegments(){
 /*
     Starts segmentation
 */
-async function segment(){
+function segment(){
     if (!pyodideLoaded) {
         // Pyodide is not yet loaded, display a message or handle it appropriately
         alert("Please wait for Pyodide and packages to be loaded.");
@@ -266,8 +266,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const restartButton = document.getElementById("restartButton");
     restartButton.addEventListener("click", ()=>{
-        document.getElementById("importSection").classList.remove("hidden");
-        document.getElementById("downloadSection").classList.add("hidden");
+        document.getElementById("importSection").scrollIntoView({ behavior: 'smooth' });
     });
     await loadPackages();
     pyodideLoaded = true;
