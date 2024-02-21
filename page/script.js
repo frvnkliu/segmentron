@@ -109,7 +109,15 @@ print(f"Finished Segmenting in {elapsed_time} seconds")
 json.dumps(segmenter.encodingJson())`;
 async function main() {
     try {
+        const startTime = performance.now();
+        
+        // Update the HTML element every second
+        const timerInterval = setInterval(() => {
+            const elapsedTime = (performance.now() - startTime) / 1000; // Convert to seconds
+            document.getElementById("elapsedTime").innerText = `Elapsed Time: ${elapsedTime.toFixed(1)}s`;
+        }, 1000);
         const { results, error } = await asyncRun(segmentronCode, file);
+        clearInterval(timerInterval);
         if (results) {
             pyodide.FS.writeFile("/segmentation.txt", results["segmentation.txt"]);
             pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
