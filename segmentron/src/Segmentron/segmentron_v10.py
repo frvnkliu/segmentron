@@ -2,11 +2,15 @@ import snapgene_reader as sgreader
 import math
 from typing import List, Callable
 from tqdm import tqdm
-from . import function_list_preprocessing as preprocessing
-from . import function_list_scoring as scoring
+#Multiprocessing is not compatible with web assembly
+#from multiprocessing.managers import SharedMemoryManager
 import time
-from tqdm.contrib.concurrent import process_map
-import json
+#from tqdm.contrib.concurrent import process_map
+from . import scoring_forbidden_regions
+from . import scoring_length
+from . import scoring_microhomologies
+from . import scoring_overlap_composition
+from . import scoring_accumulator
 
 class segmentron:
     #Define stored variable types
@@ -25,8 +29,6 @@ class segmentron:
     #Stored arrays for usage in dynamic programming
     optimal_scores: List[float]
     optimal_cuts: List[int]
-    #Stored values for usage in dynamic programming
-    optimal_cut: int
 
     def __init__(self, preprocessing_functions, segment_scoring_functions, accumulating_function, parameters):
         """Initializes a segmentron class with a given list of scoring functions, a function to combine these scores, and a set of parameters
@@ -39,7 +41,7 @@ class segmentron:
         #List of scoring functions to be used
         self.segment_scoring_functions = segment_scoring_functions
         #Dictionary of parameters to be passed to scoring functions
-        self.parameters = parameters
+        self.parameters = dict(parameters)
         #Function to be used to compile multiple scores from multiple functions into a single value
         self.accumulating_function = accumulating_function
         #Ensure certain variables are included in parameters and if not included, provide default values
@@ -60,11 +62,21 @@ class segmentron:
         #Max_microhomology_length is the maximum length for a small microhomology to be recorded
         if (self.parameters.get("max_microhomology_length") is None):
             self.parameters["max_microhomology_length"] = 19
+        #Forbidden_region_classes is the number of types of forbidden regions to be considered
+        if (self.parameters.get("forbidden_region_classes") is None):
+            self.parameters["forbidden_region_class_count"] = 1
         #Set up storage areas for later use in dynamic programming
         #Set after reading from a file
         self.parameters["sequence"] = ""
-        if(self.parameters.get("forbidden_regions") is None):
-            self.parameters["forbidden_regions"] = []
+        self.parameters["forbidden_regions"] = []
+        #Parameters determining if forbidden_regions should be read from the file or generated
+        if (self.parameters.get("forbidden_regions_from_file") is None):
+            self.parameters["forbidden_regions_from_file"] = False
+        if (self.parameters.get("forbidden_region_generation") is None):
+            self.parameters["forbidden_region_generation"] = True
+        #Parameters determining how forbidden_regions should be read from a file
+        if (self.parameters.get("color") is None):
+            self.parameters["color"] = "#ff0000"
         #Set to store the segmentation for future operations following every segmentation
         self.segmentation = []
 
@@ -78,17 +90,9 @@ class segmentron:
         for segment_scoring_function in self.segment_scoring_functions:
             total_score = self.accumulating_function(total_score, segment_scoring_function(parameters, starting_index, ending_index))
         return total_score
-
-    def encodingJson(self):
-        #encodes the current segmentation
-        return {
-            "forbidden_regions": self.parameters["forbidden_regions"],
-            "optimal_scores": self.optimal_scores,
-            "optimal_cuts": self.optimal_cuts
-        }
     
     #Segment a sequence by reading from a given filepath
-    def segment_from_file(self, filepath, forbidden_region_classes = 1, coarseness = 1, multiprocessing_cores = 0):
+    def segment_from_file(self, filepath, coarseness = 1, multiprocessing_cores = 0):
         """Given a file path to a valid snapgene file, the segmentron will read the sequence and forbidden regions from the file
         Since the given file may have multiple features, only features marked with the color red (#ff0000) will be counted as forbidden regions
         This function returns the optimal score and the corresponding optimal segmentation by calling a helper function
@@ -96,46 +100,14 @@ class segmentron:
         self.parameters["filepath"] = filepath
         dictionary = sgreader.snapgene_file_to_dict(filepath)
         sequence = dictionary["seq"]
-        features = dictionary["features"]
-        color = ""
-        forbidden_regions = []
-        #Check if forbidden regions need to be grouped into classes
-        if forbidden_region_classes == 1:
-            for feature in features:
-                #Assume that all forbidden regions will be the color red (#ff0000)
-                color = feature["color"]
-                if (color == "#ff0000"):
-                    #Add the forbidden region to the list of all forbidden_regions
-                    forbidden_regions.append((feature["start"], feature["end"]))
-            forbidden_regions.sort()
-            self.parameters["forbidden_region_classes"] = [forbidden_regions]
-        else:
-            region = (0, 0)
-            region_name = ""
-            class_tag = ""
-            forbidden_region_classes_list = [[] for i in range(forbidden_region_classes)]
-            for feature in features:
-                #Assume that all forbidden regions will be the color red (#ff0000)
-                color = feature["color"]
-                if (color == "#ff0000"):
-                    region = (feature["start"], feature["end"])
-                    region_name = feature["name"]
-                    #Add the forbidden region to the list of all forbidden_regions
-                    forbidden_regions.append(region)
-                    #Check the region_name to see which class of forbidden region it belongs in
-                    #Names of features in the input file should be prefixed as "class_tag-number"
-                    #class_tag should be an integer in the range [1, forbidden_region_classes]
-                    class_tag = region_name[0 : region_name.index("-")]
-                    forbidden_region_classes_list[int(class_tag) - 1].append(region)
-            #Sort the forbidden_regions by starting index
-            forbidden_regions.sort()
-            for forbidden_region_class in forbidden_region_classes_list:
-                forbidden_region_class.sort()
-            parameters["forbidden_region_classes"] = forbidden_region_classes_list
-        return self.segment(sequence, forbidden_regions, coarseness, multiprocessing_cores)
+        self.parameters["sequence"] = sequence
+        #Preprocess the sequence and store relevant information
+        self.preprocess()
+        forbidden_regions = self.parameters["forbidden_regions"]
+        return self.segment(sequence.upper(), forbidden_regions, coarseness, multiprocessing_cores, False)
 
     #Segment a sequence after being given the sequence and a set of forbidden regions
-    def segment(self, sequence, forbidden_regions, coarseness = 1, multiprocessing_cores = 0):
+    def segment(self, sequence, forbidden_regions, coarseness = 1, multiprocessing_cores = 0, preprocessing = True):
         """Given a sequence and a list of forbidden regions, the segmentron will find an optimal segmentation through dynamic programming
         This helper function is not supposed to be called unless it is through the segment_from_file function
         This helper function returns the optimal score and the corresponding optimal segmentation"""
@@ -146,12 +118,12 @@ class segmentron:
         #Store sequence and forbidden_regions for possible future operations
         self.parameters["sequence"] = sequence.upper()
         self.parameters["forbidden_regions"] = forbidden_regions
-        #Preprocess the sequence and store relevant information
-        self.preprocess()
+        #Preprocess the sequence and store relevant information if necessary
+        if (preprocessing):
+            self.preprocess()
         #Set up multiprocessing
         smm = None
         #Set up dynamic programming arrays for optimal scores
-        #This was removed since SMM cannot function on webassembly
         """if (multiprocessing_cores > 0):
             smm = SharedMemoryManager()
             smm.start()
@@ -186,6 +158,8 @@ class segmentron:
             self.segment_subsequence(current_index)
             #Update progress bar
             progress_bar.update(1)
+            if (current_index % 5000 == 0):
+                print(f"A total of {current_index} indices have been processed")
         #Ensure that the entire sequence is sequenced in case it was skipped due to the coarseness setting
         self.segment_subsequence(sequence_length)
         progress_bar.update(1)
@@ -215,7 +189,7 @@ class segmentron:
         print(f"This function has taken {time.perf_counter() - start_time} seconds to run")
         return self.optimal_scores[sequence_length], self.segmentation
     
-    #Goes through all preprocessing functions given and collects all infofrmation necessary
+    #Goes through all preprocessing functions given and collects all information necessary
     def preprocess(self):
         for preprocessing_function in self.preprocessing_functions:
             preprocessing_function(self.parameters)
@@ -354,31 +328,36 @@ class segmentron:
                 #Write forbidden regions to the bed file
                 f.write(f"0\t{forbidden_regions[i][0]}\t{forbidden_regions[i][1]}\tForbidden Region {i + 1}\t0\t+\t0\t0\t255,0,0\n")
         return filepath
-
+    
 #Test code
 if __name__ == "__main__":
-    segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, scoring.overlap_composition_score, scoring.forbidden_region_class_score, scoring.microhomology_score]
-    preprocessing_functions = [preprocessing.GC_proportions, preprocessing.relevant_microhomologies]
+    segment_scoring_functions = [scoring_length.length_score, scoring_forbidden_regions.forbidden_region_score, scoring_overlap_composition.overlap_composition_score, scoring_forbidden_regions.forbidden_region_class_score, scoring_microhomologies.microhomology_score]
+    preprocessing_functions = [scoring_forbidden_regions.forbidden_regions, scoring_overlap_composition.GC_proportions, scoring_microhomologies.relevant_microhomologies]
     parameters = {
                     "max_length" : 3000,
                     "min_length" : 1000,
                     "overlap" : 100,
                     "microhomology_distance" : 20,
                     "min_microhomology_length" : 8,
-                    "max_microhomology_length" : 19
+                    "max_microhomology_length" : 19,
+                    "forbidden_region_class_count" : 1,
+                    "forbidden_regions_from_file" : False,
+                    "forbidden_region_generation" : False,
+                    "color" : "#ff0000"
                 }
-    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring.addition_function, parameters)
-    filepath = "./Hba_Sergio_Test_No_Forbidden_Regions.dna" 
-    total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_region_classes = 1, multiprocessing_cores = 0, coarseness = 1)
+    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
+    filepath = "./Hba_Sergio_Test.dna" 
+    total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 0, coarseness = 1)
     segmenter.print_results()
     segmenter.write_subsequences_to_txt("segmentation_multiprocessed.txt")
     segmenter.write_segments_to_bed("segmentation_multiprocessed.bed")
     segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
 
-    preprocessing_functions.insert(0, preprocessing.forbidden_regions)
-    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring.addition_function, parameters)
-    filepath = "./Hba_Sergio_Test_No_Forbidden_Regions.dna" 
-    total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_region_classes = 1, multiprocessing_cores = 0, coarseness = 1)
+    parameters["forbidden_regions_from_file"] = True
+    parameters["forbidden_region_generation"] = True
+    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
+    filepath = "./Hba_Sergio_Test.dna" 
+    total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 0, coarseness = 1)
     segmenter.print_results()
     segmenter.write_subsequences_to_txt("segmentation.txt")
     segmenter.write_segments_to_bed("segmentation.bed")
