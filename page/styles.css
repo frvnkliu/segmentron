@@ -1,3 +1,21 @@
+#sections{
+    display: grid;
+    gap: var(--size-3);
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+
+    scroll-snap-type: x mandatory;
+}
+
+#sections > div{
+    scroll-snap-align: center;
+    padding: var(--size-3);
+}
+
+
 body {
     font-family: Helvetica;
     text-align: left; /* Align everything to the left */
@@ -146,6 +164,7 @@ label {
 
 .hidden{
     display: none;
+    /*background-color: rgb(125, 125, 125);*/
 }
 
 .disabledButton{
@@ -189,8 +208,6 @@ label {
     margin-top: 10px;
 }
 
-
-
 #parameterSelectors {
     text-align: left; /* Reset text alignment */
 }
@@ -215,4 +232,21 @@ label {
 
 #parameterSection {
     margin-bottom: 20px; /* Add some bottom margin to create space below the parameterSection */
+}
+
+#loading-bar {
+    width: 80%;
+    height: 20px;
+    background-color: #ddd;
+    margin-top: 50px;
+}
+
+#progress-bar {
+    height: 100%;
+    width:50%;
+    background-color: #4caf50;
+}
+
+#restartButton{
+    background-color: #6a6a6a;
 }

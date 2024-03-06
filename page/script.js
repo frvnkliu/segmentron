@@ -1,60 +1,36 @@
-//import { segmentronCode } from './segemntron.js';
+import { asyncRun } from "./py-worker.js";
 
 let pyodideLoaded = false;
+
 let pyodide;
 var segmented;
 var file;
-//var content;
-
 async function loadPackages() {
     pyodide = await loadPyodide();
-
-    //Imports with Micropip
-    await pyodide.loadPackage("micropip");
-    const micropip = pyodide.pyimport("micropip");
-    await micropip.install("biopython");
-    await micropip.install("snapgene_reader");
-    await micropip.install("typing");
-    await micropip.install("Bio");
-    await micropip.install("https://test-files.pythonhosted.org/packages/4a/f3/45dfbd7f98836cf9563a1f8f17a74db1c4b8ec5a3257d6ebd6813b73bd09/Segmentron-9.1.0-py3-none-any.whl");
     console.log("Packages Loaded");
-/*const segmentronCode = 
-`
-import time
-start_time = time.time()
-
-# Import Segmentron and its modules
-import Segmentron
-import Segmentron.function_list_scoring as scoring
-import Segmentron.function_list_preprocessing as preprocessing
-
-end_time = time.time()
-elapsed_time = end_time - start_time
-
-print(f"Finished import in {elapsed_time} seconds")
-start_time = time.time()
-segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, scoring.overlap_composition_score, scoring.forbidden_region_class_score, scoring.microhomology_score]
-preprocessing_functions = [preprocessing.GC_proportions]
-parameters = {
-                "max_length" : 3000,
-                "min_length" : 1000,
-                "overlap" : 100,
-                "microhomology_distance" : 20,
-                "min_microhomology_length" : 8,
-                "max_microhomology_length" : 19
-            }
-segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring.addition_function, parameters)
-filepath = "./sequence.dna"
-print("Finished Scoring")
-total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_region_classes = 1, multiprocessing_cores = 0, coarseness = 1)
-segmenter.print_results()
-segmenter.write_subsequences_to_txt("segmentation_multiprocessed.txt")
-segmenter.write_segments_to_bed("segmentation_multiprocessed.bed")
-segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
+/*const script = 
+    `
+import statistics
+import json
+def obj(arg1, arg2):
+    return {
+        "arg1": arg1,
+        "arg2": arg2
+    }
+print("Hrllo2")
+obj(123, 245)
+print(obj(123, 245))
+json.dumps(obj(123, 245))
 `;
-pyodide.runPythonAsync(segmentronCode);*/
-}
+const resultString = await pyodide.runPythonAsync(script);
+const resObj = JSON.parse(resultString);
+console.log(resObj);*/
+};
 
+
+/*
+    Async file read given input: File file
+*/
 function readFileAsync(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -70,6 +46,10 @@ function readFileAsync(file) {
     });
 }
 
+
+/*
+    Retrieves parameters from the parameters section as an object
+*/
 function getParameters() {
     // Get the values from the input elements within the parameter section
     const parameterSelectors = Array.from(document.getElementById("parameterSelectors").children);
@@ -82,15 +62,15 @@ function getParameters() {
     return parameterValues;
 }
 
+/*
+    Starts segmentation from a file
+*/
 async function segmentFile(){
-    const content = await readFileAsync(file);
-    const uint8ArrayContent = new Uint8Array(content);
-    const param = getParameters()
+    const param = getParameters();
     console.log(param);
-    pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
     const segmentronCode = 
-`
-import time
+`import time
+import json
 start_time = time.time()
 
 # Import Segmentron and its modules
@@ -104,8 +84,8 @@ elapsed_time = end_time - start_time
 print(f"Finished import in {elapsed_time} seconds")
 
 start_time = time.time()
-segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, scoring.overlap_composition_score, scoring.forbidden_region_class_score, scoring.microhomology_score]
-preprocessing_functions = [preprocessing.GC_proportions, preprocessing.relevant_microhomologies]
+segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, ${param["GCCount"]?"scoring.overlap_composition_score, ":""} scoring.forbidden_region_class_score, scoring.microhomology_score]
+preprocessing_functions = [${param["GCCount"]?"preprocessing.GC_proportions, ":""}preprocessing.relevant_microhomologies]
 parameters = {
                 "max_length" : ${param["maxLen"]},
                 "min_length" : ${param["minLen"]},
@@ -126,17 +106,49 @@ end_time = time.time()
 elapsed_time = end_time - start_time
 
 print(f"Finished Segmenting in {elapsed_time} seconds")
-`;
-    await pyodide.runPythonAsync(segmentronCode);
+json.dumps(segmenter.encodingJson())`;
+async function startWebWorkerSegment() {
+    try {
+        const startTime = performance.now();
+        
+        // Update the HTML element every second
+        const timerInterval = setInterval(() => {
+            const elapsedTime = (performance.now() - startTime) / 1000; // Convert to seconds
+            document.getElementById("elapsedTime").innerText = `Elapsed Time: ${elapsedTime.toFixed(1)}s`;
+        }, 1000);
+        const { results, error } = await asyncRun(segmentronCode, file);
+        clearInterval(timerInterval);
+        if (results) {
+            pyodide.FS.writeFile("/segmentation.txt", results["segmentation.txt"]);
+            pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
+            pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);        
+            segmented = true;
+            document.getElementById("downloadSection").classList.remove("hidden");
+            document.getElementById("downloadSection").scrollIntoView({ behavior: 'smooth' });
+            document.getElementById("status").innerHTML = "Segmentation Finished!";
+            document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
+            alert("Segments are ready!");
+        } else if (error) {
+        console.log("pyodideWorker error: ", error);
+        }
+    } catch (e) {
+        console.log(
+        `Error in pyodideWorker at ${e.filename}, Line: ${e.lineno}, ${e.message}`,
+        );
+    }
+}
+startWebWorkerSegment();
 }
 
-
+/*
+    Downloads .txt output file of segmentation
+*/
 function downloadSegmentsTxt(){
     if(!segmented){
         alert("Please wait for segmentation to finish");
         return;
     }
-    const fileName = file.name.split(".")[0];
+    const fileName = file ? file.name.split(".")[0]: "";
     const content = pyodide.FS.readFile("/segmentation.txt");
     const blob = new Blob([content],  {type: "text/plain"});
     const a = document.createElement("a");
@@ -147,13 +159,16 @@ function downloadSegmentsTxt(){
     document.body.removeChild(a);
 }
 
+/*
+    Downloads .bed output file of segmentation
+*/
 function downloadSegmentsBed() {
     if(!segmented){
         alert("Please wait for segmentation to finish");
         return;
     }
     // Split into multiple download buttons
-    const fileName = file.name.split(".")[0];
+    const fileName = file ? file.name.split(".")[0]: "";
     const content = pyodide.FS.readFile("/segmentation.bed");
     const blob = new Blob([content],  {type: "application/octet-stream"});
     const a = document.createElement("a");
@@ -164,13 +179,16 @@ function downloadSegmentsBed() {
     document.body.removeChild(a);
 }
 
-function downloadSegmentsBed2() {
+/*
+    Downloads .bed output file of segmentation + forbidden regions
+*/
+function downloadSegmentsBedFR() {
     if(!segmented){
         alert("Please wait for segmentation to finish");
         return;
     }
     // Split into multiple download buttons
-    const fileName = file.name.split(".")[0];
+    const fileName = file ? file.name.split(".")[0]: "";
     const content = pyodide.FS.readFile("/segmentation_and_forbidden_regions_multiprocessed.bed");
     const blob = new Blob([content],  {type: "application/octet-stream"});
     const a = document.createElement("a");
@@ -181,13 +199,17 @@ function downloadSegmentsBed2() {
     document.body.removeChild(a);
 }
 
-
+/*
+    Downloads segments of code
+*/
 function downloadSegments(){
     const exportType = document.getElementById('exportFormat').value;
     switch(exportType){
         case "bed":
             downloadSegmentsBed();
-            downloadSegmentsBed2();
+            break;
+        case "bedFR":
+            downloadSegmentsBedFR();
             break;
         case "txt":
             downloadSegmentsTxt();
@@ -195,7 +217,10 @@ function downloadSegments(){
     }
 }
 
-async function segment(){
+/*
+    Starts segmentation
+*/
+function segment(){
     if (!pyodideLoaded) {
         // Pyodide is not yet loaded, display a message or handle it appropriately
         alert("Please wait for Pyodide and packages to be loaded.");
@@ -205,21 +230,18 @@ async function segment(){
     var fileInput = document.getElementById("upload");
 
     // Get the selected file
-    file = fileInput.files[0];
+    
     //var fastaSegment = document.getElementById("segment").value;
 
-    if (file) {
+    if (fileInput.files[0]) {
+        file = fileInput.files[0];
         // File is selected, you can perform further actions
         console.log("Selected file:", file);
-        document.getElementById("importSection").classList.add("hidden");
+        //document.getElementById("importSection").classList.add("hidden");
         document.getElementById("status").innerHTML = "Calculating Optimal Segmentation... (Please Wait, May Take a While)";
         document.getElementById("segmentSection").classList.remove("hidden");
-        await segmentFile();
-        segmented = true;
-        document.getElementById("segmentSection").classList.add("hidden");
-        document.getElementById("downloadSection").classList.remove("hidden");
-        document.getElementById("status").innerHTML = "Segmentation Finished!";
-        alert("Segments are ready!");
+        document.getElementById("segmentSection").scrollIntoView({ behavior: 'smooth' });
+        segmentFile();
     } else {
         // No file is selected
         /*if (!fastaSegment.trim()) {
@@ -227,6 +249,8 @@ async function segment(){
             alert("Please enter a FASTA segment.");
             return; // Stop further execution
         }*/
+        alert("Please upload a file");
+
     }
 }
 
@@ -239,6 +263,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const downloadButton = document.getElementById("downloadButton");
     downloadButton.addEventListener("click", downloadSegments);
+
+    const restartButton = document.getElementById("restartButton");
+    restartButton.addEventListener("click", ()=>{
+        document.getElementById("importSection").scrollIntoView({ behavior: 'smooth' });
+    });
     await loadPackages();
     pyodideLoaded = true;
     var fileInput = document.getElementById("upload");

@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Segmentron</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
-    <script src = script.js></script>
+    <script type ="module" src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script type ="module" src = webworker.js></script>
+    <script type ="module" src = py-worker.js></script>
+    <script type ="module" src = script.js></script>
 </head>
 
 <body>
@@ -15,46 +17,58 @@
         <div id = links>
             <a href="https://frvnkliu.github.io/segmentron/">Segmentron</a> <a href="help">Help</a> <a href="about">About</a>
         </div>
-
-        <div id = "importSection">
-            <h2>Step 1</h2>
-            <div class="file-container">
-                <label for="upload">Upload file ⓘ</label> 
-                <span class="tooltip">ⓘ Supported file types: .dna, .txt</span>
-                <input type="file" id="upload" accept= ".dna" title="Supported file types: .dna"> 
-            </div>
-            <div id = "parameterSection">
-                <label for="parameterSelectors">Advanced</label>
-                <div id="parameterSelectors">
-                    <div><label>BLAST</label><input type="checkbox" name= "blast" unchecked></div>
-                    <div><label>GC Count</label> <input type="checkbox" name = "GCCount" unchecked></div>
-                    <div><label>MaxLength</label><input type="text" name="maxLen" value="3000"> </div>
-                    <div><label>Min Length</label><input type="text" name="minLen" value= "1000"> </div>
-                    <div><label>Overlap</label><input type="text" name="overlap" value= "100"> </div>
-                    <div><label>Microhomology Distance</label><input type="text" name="microDist" value="20"> </div>
-                    <div><label>Min Microhomology Length</label><input type="text" name="minMicroLen" value="8"> </div>
-                    <div><label>Max Microhomology Length</label><input type="text" name="maxMicroLen" value="19"> </div>
-                </div>
-            </div>
-            <button type="button" id="findSegments">Submit</button>
-            <p>Need Help? <a href = "help#sequence" target="_blank">Sequence File Guide</a></p>
-        </div>
-
-
-        <div id = "segmentSection" class = "hidden">
-            <h2>Step 2</h2>
-            <img src="loadingCat.gif" alt="Loading Cat">
-        </div>
         
-        <div id = "downloadSection" class = "hidden" >
-            <h2>Step 3</h2>
-            <label for="exportFormat">Export Type:</label>
-            <select id="exportFormat">
-                <option value="bed">BED Format (.bed)</option>
-                <option value="txt">TXT Format (.txt)</option>
-            </select>
-            <button type="button" id="downloadButton">Download</button>
-            <p>Need Help? <a href = "help#output" target="_blank">Output File Guide</a></p>
+        <div id = "sections">
+            <div id = "importSection">
+                <h2>Step 1</h2>
+                <div class="file-container">
+                    <label for="upload">Upload file ⓘ</label> 
+                    <span class="tooltip">ⓘ Supported file types: .dna, .txt</span>
+                    <input type="file" id="upload" accept= ".dna" title="Supported file types: .dna"> 
+                </div>
+                <p>Example File: <a href="HLA2_Sergio_Test.dna">HLA2_Sergio_test.dna</a></p>
+                <br>
+                <div id = "parameterSection">
+                    <label for="parameterSelectors">Parameters</label>
+                    <div id="parameterSelectors">
+                        <!--div><label>BLAST</label><input type="checkbox" name= "blast" unchecked></div-->
+                        <div><label>GC Count</label> <input type="checkbox" name = "GCCount" checked></div>
+                        <div><label>MaxLength</label><input type="text" name="maxLen" value="3000"> </div>
+                        <div><label>Min Length</label><input type="text" name="minLen" value= "1000"> </div>
+                        <div><label>Overlap</label><input type="text" name="overlap" value= "100"> </div>
+                        <div><label>Microhomology Distance</label><input type="text" name="microDist" value="20"> </div>
+                        <div><label>Min Microhomology Length</label><input type="text" name="minMicroLen" value="8"> </div>
+                        <div><label>Max Microhomology Length</label><input type="text" name="maxMicroLen" value="19"> </div>
+                    </div>
+                </div>
+                <!--<div id="loading-bar">
+                    <div id="progress-bar"></div>
+                </div>-->
+                <button type="button" id="findSegments">Submit</button>
+                <p>Need Help? <a href = "help#sequence" target="_blank">Sequence File Guide</a></p>
+            </div>
+    
+    
+            <div id = "segmentSection" class = "hidden">
+                <h2>Step 2</h2>
+                <p id = "elapsedTime">Elapsed Time: ---</p>
+                <img src="loadingCat.gif" alt="Loading Cat">
+            </div>
+            
+            <div id = "downloadSection" class = "hidden">
+                <h2>Step 3</h2>
+                <p id = "inputFileName">Text Input</p>
+                <label for="exportFormat">Export Type:</label>
+                <select id="exportFormat">
+                    <option value="bed">BED Format (.bed)</option>
+                    <option value="bedFR">BED Format + Forbidden Regions (.bed)</option>
+                    <option value="txt">TXT Format (.txt)</option>
+                </select>
+                <button type="button" id="downloadButton">Download</button>
+                <p>Need Help? <a href = "help#output" target="_blank">Output File Guide</a></p>
+                <button type="button" id="restartButton">Start Again</button>
+    
+            </div>
         </div>
         <p id = "status">Importing Python Libraries...</p>
 

@@ -11,6 +11,7 @@ from . import scoring_length
 from . import scoring_microhomologies
 from . import scoring_overlap_composition
 from . import scoring_accumulator
+import json
 
 class segmentron:
     #Define stored variable types
@@ -29,7 +30,8 @@ class segmentron:
     #Stored arrays for usage in dynamic programming
     optimal_scores: List[float]
     optimal_cuts: List[int]
-
+    
+    
     def __init__(self, preprocessing_functions, segment_scoring_functions, accumulating_function, parameters):
         """Initializes a segmentron class with a given list of scoring functions, a function to combine these scores, and a set of parameters
         The parameters should be passed as a dictionary and all scoring functions should take a dictionary of parameters as arguments
@@ -65,6 +67,8 @@ class segmentron:
         #Forbidden_region_classes is the number of types of forbidden regions to be considered
         if (self.parameters.get("forbidden_region_classes") is None):
             self.parameters["forbidden_region_class_count"] = 1
+        if(self.parameters.get("block_size") is None):
+            self.parameters["block_size"] = 10000
         #Set up storage areas for later use in dynamic programming
         #Set after reading from a file
         self.parameters["sequence"] = ""
@@ -80,6 +84,22 @@ class segmentron:
         #Set to store the segmentation for future operations following every segmentation
         self.segmentation = []
 
+    def encodeSegmentron(self, blockIndex):
+        #encodes the current segmentation
+        data = {
+            "parameters": self.parameters,
+            "segmentation": {
+                "segmentation": self.segmentation,
+                "optimal_scores": self.optimal_scores,
+                "optimal_cuts": self.optimal_cuts,
+                "blockIndex": blockIndex
+            }
+        }
+        file_path = "segmentron.json"
+
+        with open(file_path, 'w') as json_file:
+            json.dump(self.to_dict(), json_file)
+    
     #Score a segment using all stored segment scoring functions
     #Parameters input dictionary must contain all necessary parameters for all stored segment scoring functions
     def score_segment(self, parameters, starting_index, ending_index):
@@ -352,7 +372,6 @@ if __name__ == "__main__":
     segmenter.write_subsequences_to_txt("segmentation_multiprocessed.txt")
     segmenter.write_segments_to_bed("segmentation_multiprocessed.bed")
     segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
-
     parameters["forbidden_regions_from_file"] = True
     parameters["forbidden_region_generation"] = True
     segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
