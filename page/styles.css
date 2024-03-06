@@ -3,8 +3,7 @@
     gap: var(--size-3);
     grid-auto-flow: column;
     grid-auto-columns: 100%;
-    
-    overflow-x: auto;
+    overflow-x: scroll;
     overscroll-behavior-inline: contain;
 
     scroll-snap-type: x mandatory;
@@ -106,7 +105,7 @@ button:hover {
 img {
     width: 40%; /* Set the width of the image to 60% */
     height: auto; /* Maintain the aspect ratio */
-    display: block; /* Make it a block-level element to control margins */
+    display: inline-block; /* Make it a block-level element to control margins */
     margin: 0 auto; /* Center the image horizontally */
     margin-top: 20px; /* Add some top margin */
 }
@@ -249,4 +248,30 @@ label {
 
 #restartButton{
     background-color: #6a6a6a;
+}
+
+#scrollBtns button {
+    width: 50px; /* Adjust button width as needed */
+    height: 50px; /* Make buttons square */
+    margin: 0 5px; /* Adjust margin as needed */
+}
+
+#scrollBtns {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    align-items: center; /* Center the buttons vertically */
+    margin-top: 20px; /* Adjust margin as needed */
+}
+
+textarea {
+    width: 100%;
+    height: 200px; /* Adjust as needed */
+    overflow-y: scroll;
+}
+
+#progContainer{
+    width: 35%;
+    height: 40px;
+    display: inline-block;
+    margin-bottom: 20px;
 }

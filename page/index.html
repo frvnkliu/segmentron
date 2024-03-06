@@ -53,6 +53,9 @@
                 <h2>Step 2</h2>
                 <p id = "elapsedTime">Elapsed Time: ---</p>
                 <img src="loadingCat.gif" alt="Loading Cat">
+                <div id = "progContainer">
+                    <textarea id="progressMsg" rows="10" readonly>Progress:</textarea>
+                </div>
             </div>
             
             <div id = "downloadSection" class = "hidden">
@@ -67,8 +70,11 @@
                 <button type="button" id="downloadButton">Download</button>
                 <p>Need Help? <a href = "help#output" target="_blank">Output File Guide</a></p>
                 <button type="button" id="restartButton">Start Again</button>
-    
             </div>
+        </div>
+        <div id = "scrollBtns">
+            <button id="scrollLeftBtn">&lt;</button>
+            <button id="scrollRightBtn">&gt;</button>
         </div>
         <p id = "status">Importing Python Libraries...</p>
 

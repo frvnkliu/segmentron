@@ -17,6 +17,7 @@ async function loadPyodideAndPackages() {
   await micropip.install("typing");
   await micropip.install("Bio");
   await micropip.install("https://test-files.pythonhosted.org/packages/20/cd/fd0670165a01ce60350e114c15c242799348522e987475ec14614e7fd092/Segmentron-9.2.0-py3-none-any.whl");
+//  await micropip.install("https://test-files.pythonhosted.org/packages/e1/13/0b1199d02e56facb2c8490103897ab6940d7421e1aaf25121b3eba3a38f5/Segmentron-10.0.0-py3-none-any.whl");
   await self.pyodide.loadPackage(["numpy", "pytz"]);
 }
 let pyodideReadyPromise = loadPyodideAndPackages();
@@ -38,8 +39,9 @@ function readFileAsync(file) {
 self.onmessage = async (event) => {
   // make sure loading is done
   await pyodideReadyPromise;
+  pyodide.setStdout({ batched: (msg) => self.postMessage({type: "output", msg})  });
   // Don't bother yet with this line, suppose our API is built in such a way:
-  const { id, python, file } = event.data;
+  const {python, file } = event.data;
   // The worker copies the context in its own "memory" (an object mapping name to values)
   /*for (const key of Object.keys(context)) {
     self[key] = context[key];
@@ -56,12 +58,13 @@ self.onmessage = async (event) => {
     const output3 = pyodide.FS.readFile("/segmentation_and_forbidden_regions_multiprocessed.bed");
     const results = 
     {
+      "type": "segmentation",
       "segmentation.txt": output1,
       "segmentation.bed": output2,
       "segmentation_and_forbidden_regions_multiprocessed.bed": output3
     };
-    self.postMessage({ results, id });
+    self.postMessage(results);
   } catch (error) {
-    self.postMessage({ error: error.message, id });
+    self.postMessage({error: error.message});
   }
 };

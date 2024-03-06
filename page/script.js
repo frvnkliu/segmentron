@@ -1,33 +1,47 @@
-import { asyncRun } from "./py-worker.js";
-
 let pyodideLoaded = false;
-
 let pyodide;
 var segmented;
 var file;
+var startTime;
+var timerInterval;
+
 async function loadPackages() {
     pyodide = await loadPyodide();
     console.log("Packages Loaded");
-/*const script = 
-    `
-import statistics
-import json
-def obj(arg1, arg2):
-    return {
-        "arg1": arg1,
-        "arg2": arg2
+/*    pyodide.setStdout({batched: (str) => {
+        document.getElementById('findSegments').innerHTML = str;
     }
-print("Hrllo2")
-obj(123, 245)
-print(obj(123, 245))
-json.dumps(obj(123, 245))
-`;
-const resultString = await pyodide.runPythonAsync(script);
-const resObj = JSON.parse(resultString);
-console.log(resObj);*/
+    });
+    const testCode = 
+`print("hello hello")
+`
+    await pyodide.runPythonAsync(testCode);*/
 };
 
+const worker = new Worker('./webworker.js');
 
+worker.onmessage = function(event){
+    console.log("Message received from worker");
+    console.log(event);
+    const results = event.data;
+    if (results["type"] == "segmentation") {
+        clearInterval(timerInterval);
+        pyodide.FS.writeFile("/segmentation.txt", results["segmentation.txt"]);
+        pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
+        pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);        
+        segmented = true;
+        document.getElementById("downloadSection").classList.remove("hidden");
+        document.getElementById("downloadSection").scrollIntoView({ behavior: 'smooth' });
+        document.getElementById("status").innerHTML = "Segmentation Finished!";
+        document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
+        alert("Segments are ready!");
+    }else if(results["type"] == "output"){
+        console.log("Message From Worker: ", results["msg"]);
+        const progressMsg = document.getElementById("progressMsg")
+        progressMsg.value += `\n${results["msg"]}`;
+        progressMsg.scrollTop = progressMsg.scrollHeight;
+    }
+}
 /*
     Async file read given input: File file
 */
@@ -107,30 +121,21 @@ elapsed_time = end_time - start_time
 
 print(f"Finished Segmenting in {elapsed_time} seconds")
 json.dumps(segmenter.encodingJson())`;
+
+//post message to web worker and activate timer
 async function startWebWorkerSegment() {
     try {
-        const startTime = performance.now();
-        
+        startTime = performance.now();
         // Update the HTML element every second
-        const timerInterval = setInterval(() => {
+        timerInterval = setInterval(() => {
             const elapsedTime = (performance.now() - startTime) / 1000; // Convert to seconds
             document.getElementById("elapsedTime").innerText = `Elapsed Time: ${elapsedTime.toFixed(1)}s`;
         }, 1000);
-        const { results, error } = await asyncRun(segmentronCode, file);
-        clearInterval(timerInterval);
-        if (results) {
-            pyodide.FS.writeFile("/segmentation.txt", results["segmentation.txt"]);
-            pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
-            pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);        
-            segmented = true;
-            document.getElementById("downloadSection").classList.remove("hidden");
-            document.getElementById("downloadSection").scrollIntoView({ behavior: 'smooth' });
-            document.getElementById("status").innerHTML = "Segmentation Finished!";
-            document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
-            alert("Segments are ready!");
-        } else if (error) {
-        console.log("pyodideWorker error: ", error);
-        }
+
+        worker.postMessage({
+            python: segmentronCode,
+            file: file
+        });
     } catch (e) {
         console.log(
         `Error in pyodideWorker at ${e.filename}, Line: ${e.lineno}, ${e.message}`,
@@ -268,6 +273,30 @@ document.addEventListener("DOMContentLoaded", async function () {
     restartButton.addEventListener("click", ()=>{
         document.getElementById("importSection").scrollIntoView({ behavior: 'smooth' });
     });
+
+    // Get references to the scroll buttons and the sections container
+    const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+    const scrollRightBtn = document.getElementById('scrollRightBtn');
+    const sectionsContainer = document.getElementById('sections');
+
+    // Add event listeners to scroll buttons
+    scrollLeftBtn.addEventListener('click', () => {
+        const scrollAmount = sectionsContainer.offsetWidth * 0.6; // Scroll by 60% of the section width
+        sectionsContainer.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+
+    scrollRightBtn.addEventListener('click', () => {
+        const scrollAmount = sectionsContainer.offsetWidth * 0.6; // Scroll by 60% of the section width
+        sectionsContainer.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+
+
     await loadPackages();
     pyodideLoaded = true;
     var fileInput = document.getElementById("upload");
