@@ -7,7 +7,7 @@ var timerInterval;
 
 async function loadPackages() {
     pyodide = await loadPyodide();
-    console.log("Packages Loaded");
+    console.log("Packagxes Loaded");
 /*    pyodide.setStdout({batched: (str) => {
         document.getElementById('findSegments').innerHTML = str;
     }
@@ -40,6 +40,12 @@ worker.onmessage = function(event){
         const progressMsg = document.getElementById("progressMsg")
         progressMsg.value += `\n${results["msg"]}`;
         progressMsg.scrollTop = progressMsg.scrollHeight;
+        const pattern = /^A total of (\d+)/;
+        const match = results["msg"].match(pattern);
+        if(match){
+            const indices =  parseInt(match[1]);
+            console.log("Progress: " + indices)
+        }
     }
 }
 /*
@@ -89,8 +95,11 @@ start_time = time.time()
 
 # Import Segmentron and its modules
 import Segmentron
-import Segmentron.function_list_scoring as scoring
-import Segmentron.function_list_preprocessing as preprocessing
+import Segmentron.scoring_forbidden_regions as scoring_forbidden_regions
+import Segmentron.scoring_length as scoring_length
+import Segmentron.scoring_microhomologies as scoring_microhomologies
+import Segmentron.scoring_overlap_composition as scoring_overlap_composition
+import Segmentron.scoring_accumulator as scoring_accumulator
 
 end_time = time.time()
 elapsed_time = end_time - start_time
@@ -98,20 +107,24 @@ elapsed_time = end_time - start_time
 print(f"Finished import in {elapsed_time} seconds")
 
 start_time = time.time()
-segment_scoring_functions = [scoring.length_score, scoring.forbidden_region_score, ${param["GCCount"]?"scoring.overlap_composition_score, ":""} scoring.forbidden_region_class_score, scoring.microhomology_score]
-preprocessing_functions = [${param["GCCount"]?"preprocessing.GC_proportions, ":""}preprocessing.relevant_microhomologies]
+segment_scoring_functions = [scoring_length.length_score, scoring_forbidden_regions.forbidden_region_score,${param["GCCount"]?"scoring_overlap_composition.overlap_composition_score,":""} scoring_forbidden_regions.forbidden_region_class_score, scoring_microhomologies.microhomology_score]
+preprocessing_functions = [scoring_forbidden_regions.forbidden_regions, ${param["GCCount"]?"scoring_overlap_composition.GC_proportions":""}, scoring_microhomologies.relevant_microhomologies]
 parameters = {
                 "max_length" : ${param["maxLen"]},
                 "min_length" : ${param["minLen"]},
                 "overlap" : ${param["overlap"]},
                 "microhomology_distance" : ${param["microDist"]},
                 "min_microhomology_length" : ${param["minMicroLen"]},
-                "max_microhomology_length" : ${param["maxMicroLen"]}
+                "max_microhomology_length" : ${param["maxMicroLen"]},
+                "forbidden_region_class_count" : 1,
+                "forbidden_regions_from_file" : False,
+                "forbidden_region_generation" : False,
+                "color" : "#ff0000"
             }
-segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring.addition_function, parameters)
+segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
 filepath = "/sequence.dna"
 print("Start Scoring")
-total_score, segmentation = segmenter.segment_from_file(filepath, forbidden_region_classes = 1, multiprocessing_cores = 0, coarseness = 1)
+total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 0, coarseness = 1)
 segmenter.print_results()
 segmenter.write_subsequences_to_txt("/segmentation.txt")
 segmenter.write_segments_to_bed("/segmentation.bed")
@@ -120,7 +133,7 @@ end_time = time.time()
 elapsed_time = end_time - start_time
 
 print(f"Finished Segmenting in {elapsed_time} seconds")
-json.dumps(segmenter.encodingJson())`;
+`;
 
 //post message to web worker and activate timer
 async function startWebWorkerSegment() {
