@@ -52,21 +52,6 @@ class segmentron:
             self.parameters["max_length"] = 3000
         if (self.parameters.get("min_length") is None):
             self.parameters["min_length"] = 1000
-        #Overlap is the length of the desired overlap region
-        if (self.parameters.get("overlap") is None):
-            self.parameters["overlap"] = 100
-        #Microhomology_distance is the minimum distance from the ends of the segment where a microhomology can be safely included
-        if (self.parameters.get("microhomology_distance") is None):
-            self.parameters["microhomology_distance"] = 20
-        #Min_microhomology_length is the minimum length for a small microhomology to be recorded
-        if (self.parameters.get("min_microhomology_length") is None):
-            self.parameters["min_microhomology_length"] = 8
-        #Max_microhomology_length is the maximum length for a small microhomology to be recorded
-        if (self.parameters.get("max_microhomology_length") is None):
-            self.parameters["max_microhomology_length"] = 19
-        #Forbidden_region_classes is the number of types of forbidden regions to be considered
-        if (self.parameters.get("forbidden_region_classes") is None):
-            self.parameters["forbidden_region_class_count"] = 1
         if(self.parameters.get("block_size") is None):
             self.parameters["block_size"] = 10000
         #Set up storage areas for later use in dynamic programming

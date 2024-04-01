@@ -5,9 +5,11 @@ from tqdm import tqdm
 #Parameters only stores the microhomologies within this constant distance for each index
 #Returns a positive value instead of a negative value so smaller values are preferred
 def microhomology_score(parameters, starting_index, ending_index):
+    #Default value for overlap is 100
+    overlap = parameters.get("overlap", 100)
     score = 0
     contained = False
-    segment_starting_index = max(0, starting_index - parameters["overlap"])
+    segment_starting_index = max(0, starting_index - overlap)
     homologies = parameters["homologies"]
     #List of checked homologies to prevent overpenalization from double counting
     checked_homologies = []
@@ -42,8 +44,12 @@ def microhomology_score(parameters, starting_index, ending_index):
 #Helper function for relevant_microhomologies but can be used on its own
 def microhomologies(parameters):
     search_sequence = parameters["sequence"]
+    #Default value for min_microhomology_length is 8
+    min_microhomology_length = parameters.get("min_microhomology_length", 8)
+    #Default value for max_microhomology_length is 19
+    max_microhomology_length = parameters.get("max_microhomology_length", 19)
     #Calculate the number of microhomologies that are in proximity to any given index
-    microhomologies = preprocess_microhomologies(search_sequence, parameters["min_microhomology_length"], parameters["max_microhomology_length"], parameters["forbidden_regions"])
+    microhomologies = preprocess_microhomologies(search_sequence, min_microhomology_length, max_microhomology_length, parameters["forbidden_regions"])
     #Temporary storage location for dictionary that will be stored in parameters
     homologies = {}
     #Go through all homologies and store their locations organized by sequence
@@ -57,9 +63,12 @@ def microhomologies(parameters):
 def relevant_microhomologies(parameters):
     search_sequence = parameters["sequence"]
     sequence_length = len(search_sequence)
-    safe_distance = parameters["microhomology_distance"]
-    min_length = parameters["min_microhomology_length"]
-    max_length = parameters["max_microhomology_length"]
+    #Default value for safe_distance is 20
+    safe_distance = parameters.get("microhomology_distance", 20)
+    #Default value for min_microhomology_length is 8
+    min_length = parameters.get("min_microhomology_length", 8)
+    #Default value for max_microhomology_length is 19
+    max_length = parameters.get("max_microhomology_length", 19)
     #Call microhomologies as a helper function
     microhomologies(parameters)
     homologies = parameters["homologies"]

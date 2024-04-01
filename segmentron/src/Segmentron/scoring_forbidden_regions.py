@@ -74,8 +74,8 @@ def return_repeats(sequence):
 #Input dictionary must contain a list of lists of forbidden regions that are similar
 #Returns a positive value instead of a negative value so smaller values are preferred
 def forbidden_region_class_score(parameters, starting_index, ending_index):
-    forbidden_region_classes = parameters["forbidden_region_classes"]
-    if len(forbidden_region_classes) == 1:
+    forbidden_region_classes = parameters.get("forbidden_region_classes")
+    if not forbidden_region_classes or len(forbidden_region_classes) == 1:
         return 0
     region_starting_index = 0
     region_ending_index = 0
@@ -132,7 +132,7 @@ def forbidden_region_read(parameters):
     filepath = parameters["filepath"]
     dictionary = sgreader.snapgene_file_to_dict(filepath)
     features = dictionary["features"]
-    forbidden_region_color = parameters["color"]
+    forbidden_region_color = parameters.get("color", "#ff0000")
     color = ""
     forbidden_regions = []
     for feature in features:
@@ -150,7 +150,8 @@ def forbidden_region_read(parameters):
 #Helper function to read forbidden region classes from a file
 def forbidden_region_classes_read(parameters):
     filepath = parameters["filepath"]
-    forbidden_region_class_count = parameters["forbidden_region_class_count"]
+    #Default value for forbidden_region_class_count is 1
+    forbidden_region_class_count = parameters.get("forbidden_region_class_count", 1)
     dictionary = sgreader.snapgene_file_to_dict(filepath)
     features = dictionary["features"]
     forbidden_region_color = parameters["color"]
@@ -181,11 +182,14 @@ def forbidden_region_classes_read(parameters):
 
 #Preprocessing function to read forbidden regions from a file and generate forbidden regions if necessary
 def forbidden_regions(parameters):
-    filepath = parameters["filepath"]
-    forbidden_region_class_count = parameters["forbidden_region_class_count"]
-    dictionary = sgreader.snapgene_file_to_dict(filepath)
+    #Default value for forbidden_region_class_count is 1
+    forbidden_region_class_count = parameters.get("forbidden_region_class_count", 1)
     forbidden_regions = []
-    if not (parameters["forbidden_region_generation"] or parameters["forbidden_regions_from_file"]):
+    #Default value for forbidden_region_generation is True
+    forbidden_region_generation = parameters.get("forbidden_region_generation", True)
+    #Default value for forbidden_regions_from_file is False
+    forbidden_regions_from_file = parameters.get("forbidden_regions_from_file", False)
+    if not (forbidden_region_generation or forbidden_regions_from_file):
         parameters["forbidden_regions"] = forbidden_regions
         parameters["forbidden_region_classes"] = [forbidden_regions]
         return 0
