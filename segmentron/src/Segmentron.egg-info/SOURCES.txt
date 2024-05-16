@@ -7,7 +7,8 @@ src/Segmentron/scoring_forbidden_regions.py
 src/Segmentron/scoring_length.py
 src/Segmentron/scoring_microhomologies.py
 src/Segmentron/scoring_overlap_composition.py
-src/Segmentron/segmentron_v10.py
+src/Segmentron/segmentron_multiprocessing_v1.py
+src/Segmentron/segmentron_v12.py
 src/Segmentron.egg-info/PKG-INFO
 src/Segmentron.egg-info/SOURCES.txt
 src/Segmentron.egg-info/dependency_links.txt
