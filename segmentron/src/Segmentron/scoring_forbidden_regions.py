@@ -137,7 +137,6 @@ def forbidden_region_read(parameters):
     features = dictionary["features"]
     #Default value for the color is #ff0000
     forbidden_region_color = parameters.get("color", "#ff0000")
-    print(forbidden_region_color)
     forbidden_regions = []
     for feature in features:
         #Assume that all forbidden regions will be the color red (#ff0000)

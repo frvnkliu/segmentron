@@ -23,18 +23,20 @@ class multiprocessed_dynamic_programming:
                 finish_queue.put((None, e))  # Indicates an error occurred
                 break  # Exit the loop if an error occurs
     
-    def run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name):
+    def run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name, verbose):
         #results = [multiprocessing.Array(array_type, length) for array_type in types]
         results = [np.empty(length, dtype=array_type) for array_type in types]
         for i in range(length):
             getattr(task_object, task_name)(i, results)
+            if (i % 1000 == 0) and verbose:
+                print(f"index {i} has been finished\n")
         return results
 
-    def run_multiprocess_calculation(self, num_workers, length, types, protection_length, task_object, task_name):
+    def run_multiprocess_calculation(self, num_workers, length, types, protection_length, task_object, task_name, verbose):
         assert (protection_length > 0)
         self.protection_length = protection_length
         if(num_workers == 1):
-            return self.run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name)
+            return self.run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name, verbose)
         #Initialize Multiprocessing Queues
         task_queue = multiprocessing.Queue()
         finish_queue = multiprocessing.Queue()
@@ -75,6 +77,8 @@ class multiprocessed_dynamic_programming:
             while min_unfinished_index < length and processed[min_unfinished_index]:
                 if min_unfinished_index + protection_length < length: # Create new task
                     task_queue.put(min_unfinished_index + protection_length)
+                if (min_unfinished_index % 1000 == 0) and verbose:
+                    print(f"index {min_unfinished_index} has been finished\n")
                 min_unfinished_index += 1
         #Get rid of worker
         for worker in workers:

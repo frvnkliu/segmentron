@@ -75,6 +75,8 @@ class segmentron:
     def preprocess(self):
         for preprocessing_function in self.preprocessing_functions:
             preprocessing_function(self.parameters)
+        if self.parameters.get("verbose", False):
+            print("Preprocessing finished")
         return None
     
     #Segment a sequence by reading from a given filepath
@@ -100,6 +102,8 @@ class segmentron:
         sequence_length = len(sequence)
         #Set up timer
         start_time = time.perf_counter()
+        if self.parameters.get("verbose", False):
+            print(f"Beginning the segmentation of the sequence of length {sequence_length}")
         #Pull out sequence and other parameters from parameters list ahead of time
         #Store sequence and forbidden_regions for possible future operations
         self.parameters["sequence"] = sequence.upper()
@@ -126,6 +130,8 @@ class segmentron:
                 self.segment_subsequence(current_index, [self.optimal_cuts, self.optimal_scores])
                 #Update progress bar
                 progress_bar.update(1)
+                if ((current_index / coarseness) % 1000 == 0) and self.parameters.get("verbose", False):
+                    print(f"index {current_index} has been finished\n")
             #Ensure that the entire sequence is sequenced in case it was skipped due to the coarseness setting
             self.segment_subsequence(sequence_length, [self.optimal_cuts, self.optimal_scores])
             progress_bar.update(1)
@@ -154,7 +160,7 @@ class segmentron:
         sequence_length = len(sequence)
         min_length = self.parameters["min_length"]
         multiprocesser = segmentron_multiprocessing.multiprocessed_dynamic_programming
-        return multiprocesser.run_multiprocess_calculation(multiprocesser, multiprocessing_cores, sequence_length + 1, ["i", "f"], min_length, self, "segment_subsequence")
+        return multiprocesser.run_multiprocess_calculation(multiprocesser, multiprocessing_cores, sequence_length + 1, ["i", "f"], min_length, self, "segment_subsequence", self.parameters)
 
     #Checks previous entries in stored arrays to find an optimal segmentation for a subsequence from 0 to a given ending_index
     def segment_subsequence(self, ending_index, storage_arrays):
@@ -332,7 +338,8 @@ if __name__ == "__main__":
                     "forbidden_region_class_count" : 1,
                     "forbidden_regions_from_file" : False,
                     "forbidden_region_generation" : False,
-                    "color" : "#ff0000"
+                    "color" : "#ff0000",
+                    "verbose" : False
                 }
     segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
     filepath = "./Hba_Sergio_Test.dna" 
