@@ -1,0 +1,12 @@
+[Unit]
+Description=DHCP Client Daemon
+Wants=network.target
+Documentation=man:dhcpcd(8)
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/dhcpcd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

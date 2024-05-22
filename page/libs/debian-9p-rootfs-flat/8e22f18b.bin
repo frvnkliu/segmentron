@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    purge)
+        test -d /etc/X11/fluxbox && rm -rf /etc/X11/fluxbox
+    ;;
+    remove)
+        ;;
+    *)
+        ;;
+esac
+
+
+# Automatically added by dh_installmenu
+inst=/etc/menu-methods/fluxbox
+if [ "$1" = "remove" ] && [ -f "$inst" ]; then chmod a-x $inst ; fi
+if [ -x "`which update-menus 2>/dev/null`" ]; then update-menus ; fi
+# End automatically added section
+

@@ -6,35 +6,38 @@ from Bio.Blast import NCBIXML
 import snapgene_reader as sgreader
 
 # Helper function to call BLAST and generate microhomologies
-def return_repeats(sequence):
-    with open("temp.fasta", "w") as f:
-        f.write(">seq\n" + sequence)
-    # ADD QUICK EXPLENATION FOR EACH PARAMETER
-    # Run the BLAST search. The results are stored in the "blast_results.xml" file.
-    blast_command = [
-        "blastn",                 # Command for nucleotide-nucleotide BLAST
-        "-query", "temp.fasta",   # Input query file in FASTA format
-        "-subject", "temp.fasta", # Subject file to BLAST against
-        "-out", "blast_results.xml", # Output file in XML format
-        "-outfmt", "5",           # Output format (5 for XML)
-        "-gapopen", "5",          # Cost to open a gap
-        "-gapextend", "5",        # Cost to extend a gap
-        "-perc_identity", "80",   # Percentage identity threshold
-        "-strand", "both",        # Search both strands
-        "-word_size", "20"        # Word size for initial matches
-    ]
-    # Execute the command using subprocess
-    result = subprocess.run(blast_command, capture_output = True, text = True)
+def return_repeats(sequence, read_from_file):
+    result_handle = None
+    if (read_from_file is None):
+        with open("temp.fasta", "w") as f:
+            f.write(">seq\n" + sequence)
+        # ADD QUICK EXPLENATION FOR EACH PARAMETER
+        # Run the BLAST search. The results are stored in the "blast_results.xml" file.
+        blast_command = [
+            "blastn",                 # Command for nucleotide-nucleotide BLAST
+            "-query", "temp.fasta",   # Input query file in FASTA format
+            "-subject", "temp.fasta", # Subject file to BLAST against
+            "-out", "blast_results.xml", # Output file in XML format
+            "-outfmt", "5",           # Output format (5 for XML)
+            "-gapopen", "5",          # Cost to open a gap
+            "-gapextend", "5",        # Cost to extend a gap
+            "-perc_identity", "80",   # Percentage identity threshold
+            "-strand", "both",        # Search both strands
+            "-word_size", "20"        # Word size for initial matches
+        ]
+        # Execute the command using subprocess
+        result = subprocess.run(blast_command, capture_output = True, text = True)
 
-    # Check if the command was successful
-    if result.returncode == 0:
-        print("BLAST search completed successfully.")
+        # Check if the command was successful
+        if result.returncode == 0:
+            print("BLAST search completed successfully.")
+        else:
+            print("Error in BLAST search:")
+            print(result.stderr)
+        #Open output file
+        result_handle = open("blast_results.xml")
     else:
-        print("Error in BLAST search:")
-        print(result.stderr)
-        
-    #Open output file
-    result_handle = open("blast_results.xml")
+        result_handle = open(read_from_file + ".xml")
     #Read output file
     blast_record = NCBIXML.read(result_handle)
     #List of matches found
@@ -74,8 +77,8 @@ def return_repeats(sequence):
 #Input dictionary must contain a list of lists of forbidden regions that are similar
 #Returns a positive value instead of a negative value so smaller values are preferred
 def forbidden_region_class_score(parameters, starting_index, ending_index):
-    forbidden_region_classes = parameters["forbidden_region_classes"]
-    if len(forbidden_region_classes) == 1:
+    forbidden_region_classes = parameters.get("forbidden_region_classes")
+    if not forbidden_region_classes or len(forbidden_region_classes) == 1:
         return 0
     region_starting_index = 0
     region_ending_index = 0
@@ -132,13 +135,12 @@ def forbidden_region_read(parameters):
     filepath = parameters["filepath"]
     dictionary = sgreader.snapgene_file_to_dict(filepath)
     features = dictionary["features"]
-    forbidden_region_color = parameters["color"]
-    color = ""
+    #Default value for the color is #ff0000
+    forbidden_region_color = parameters.get("color", "#ff0000")
     forbidden_regions = []
     for feature in features:
         #Assume that all forbidden regions will be the color red (#ff0000)
-        color = feature["color"]
-        if (color == forbidden_region_color):
+        if (feature["color"] == forbidden_region_color):
             #Add the forbidden region to the list of all forbidden_regions
             forbidden_regions.append((feature["start"], feature["end"]))
     #Sort the forbidden_regions by starting index
@@ -150,7 +152,8 @@ def forbidden_region_read(parameters):
 #Helper function to read forbidden region classes from a file
 def forbidden_region_classes_read(parameters):
     filepath = parameters["filepath"]
-    forbidden_region_class_count = parameters["forbidden_region_class_count"]
+    #Default value for forbidden_region_class_count is 1
+    forbidden_region_class_count = parameters.get("forbidden_region_class_count", 1)
     dictionary = sgreader.snapgene_file_to_dict(filepath)
     features = dictionary["features"]
     forbidden_region_color = parameters["color"]
@@ -181,11 +184,14 @@ def forbidden_region_classes_read(parameters):
 
 #Preprocessing function to read forbidden regions from a file and generate forbidden regions if necessary
 def forbidden_regions(parameters):
-    filepath = parameters["filepath"]
-    forbidden_region_class_count = parameters["forbidden_region_class_count"]
-    dictionary = sgreader.snapgene_file_to_dict(filepath)
+    #Default value for forbidden_region_class_count is 1
+    forbidden_region_class_count = parameters.get("forbidden_region_class_count", 1)
     forbidden_regions = []
-    if not (parameters["forbidden_region_generation"] or parameters["forbidden_regions_from_file"]):
+    #Default value for forbidden_region_generation is True
+    forbidden_region_generation = parameters.get("forbidden_region_generation", True)
+    #Default value for forbidden_regions_from_file is False
+    forbidden_regions_from_file = parameters.get("forbidden_regions_from_file", False)
+    if not (forbidden_region_generation or forbidden_regions_from_file):
         parameters["forbidden_regions"] = forbidden_regions
         parameters["forbidden_region_classes"] = [forbidden_regions]
         return 0
@@ -200,6 +206,6 @@ def forbidden_regions(parameters):
             forbidden_region_classes_read(parameters)
     #Check if forbidden regions need to be generated
     if (parameters["forbidden_region_generation"]):
-        parameters["forbidden_regions"].extend(return_repeats(parameters["sequence"]))
+        parameters["forbidden_regions"].extend(return_repeats(parameters["sequence"], parameters.get("forbidden_regions_from_xml", None)))
         parameters["forbidden_regions"].sort()
     return 0

@@ -7,7 +7,7 @@ var timerInterval;
 
 async function loadPackages() {
     pyodide = await loadPyodide();
-    console.log("Packagxes Loaded");
+    console.log("Packages Loaded");
 /*    pyodide.setStdout({batched: (str) => {
         document.getElementById('findSegments').innerHTML = str;
     }
@@ -116,9 +116,10 @@ parameters = {
                 "microhomology_distance" : ${param["microDist"]},
                 "min_microhomology_length" : ${param["minMicroLen"]},
                 "max_microhomology_length" : ${param["maxMicroLen"]},
+                "forbidden_regions_from_xml": ${param["blast"]?"\"blast_results\"":"None"},
+                "forbidden_regions_from_file": False, 
                 "forbidden_region_class_count" : 1,
-                "forbidden_regions_from_file" : False,
-                "forbidden_region_generation" : False,
+                "forbidden_region_generation" : ${param["blast"]?"True":"False"},
                 "color" : "#ff0000"
             }
 segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
@@ -147,7 +148,8 @@ async function startWebWorkerSegment() {
 
         worker.postMessage({
             python: segmentronCode,
-            file: file
+            file: file,
+            blast: param["blast"]
         });
     } catch (e) {
         console.log(

@@ -1,0 +1,53 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = configure ]; then
+  # Versions of the dhcpcd5 package prior to 7.0.8-1 didn't remove this
+  # alternative in postrm on upgrade. We don't provide this binary anymore, so
+  # remove this alternative to avoid dangling symlinks.
+  update-alternatives --remove dhcpcd /sbin/dhcpcd5
+
+  # Add a /sbin/dhcpcd symlink as some scripts hard-code this path.
+  # This is only necessary on a non-usrmerge system.
+  if [ ! -e '/sbin/dhcpcd' ]; then
+    ln -s /usr/sbin/dhcpcd /sbin/dhcpcd
+  fi
+
+  # Move DUID and leases from the location used by previous versions of the
+  # dhcpcd5 package, if necessary.
+  olddir=/var/lib/dhcpcd5
+  newdir=/var/lib/dhcpcd
+  if [ -d $olddir ]; then
+    if [ -n "$(ls -A $olddir)" ] && [ -z "$(ls -A $newdir)" ]; then
+      cp -ar $olddir/. $newdir
+    fi
+    rm -rf $olddir
+  fi
+fi
+
+# Automatically added by dh_installinit/12.1.1
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	if [ -x "/etc/init.d/dhcpcd" ]; then
+		update-rc.d dhcpcd defaults >/dev/null || exit 1
+	fi
+fi
+# End automatically added section
+# Automatically added by dh_installsystemd/12.1.1
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	# This will only remove masks created by d-s-h on package removal.
+	deb-systemd-helper unmask 'dhcpcd.service' >/dev/null || true
+
+	# was-enabled defaults to true, so new installations run enable.
+	if deb-systemd-helper --quiet was-enabled 'dhcpcd.service'; then
+		# Enables the unit on first installation, creates new
+		# symlinks on upgrades if the unit file has changed.
+		deb-systemd-helper enable 'dhcpcd.service' >/dev/null || true
+	else
+		# Update the statefile to add new symlinks (if any), which need to be
+		# cleaned up on purge. Also remove old symlinks.
+		deb-systemd-helper update-state 'dhcpcd.service' >/dev/null || true
+	fi
+fi
+# End automatically added section
+

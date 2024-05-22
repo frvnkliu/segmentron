@@ -4,7 +4,8 @@ import math
 #Score is minimized when the proportion of GC:AT is 50:50
 #Returns a positive value instead of a negative value so smaller values are preferred
 def overlap_composition_score(parameters, starting_index, ending_index):
-    overlap_length = parameters["overlap"]
+    #Default value of overlap is 100
+    overlap_length = parameters.get("overlap", 100)
     gc_proportion = parameters["gc_overlap_composition"][ending_index - overlap_length] / overlap_length
     return math.exp(4 * abs(gc_proportion - 0.5)) - 1
 
@@ -12,7 +13,8 @@ def overlap_composition_score(parameters, starting_index, ending_index):
 def GC_proportions(parameters):
     search_sequence = parameters["sequence"].upper()
     sequence_length = len(search_sequence)
-    overlap = parameters["overlap"]
+    #Default value of overlap is 100
+    overlap = parameters.get("overlap", 100)
     #Calculate GC proportions in every interval of length "overlap"
     overlap_gc_counts = [0] * (sequence_length - overlap + 1)
     #Calculate GC proportions in the first interval of length "overlap"
