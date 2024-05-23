@@ -126,7 +126,7 @@ with open("/temp.fa", "w") as f:
 
       //3await emulator.create_file("root/temp.fa", fa_uint8ArrayContent);
 
-      var blastState = true;
+      var blastState = 2;
       emulator.add_listener("serial0-output-byte", async function(byte){
           var char = String.fromCharCode(byte);
           if(char === "\r")
@@ -142,8 +142,12 @@ with open("/temp.fa", "w") as f:
               "type" : "output",
               "msg": "OutputTest:\n" + data + "\n"
             });*/
-            if(blastState){
-              blastState = false;
+            if(blastState == 2){
+              //sync
+              blastState = 1;
+              emulator.serial0_send("sync\n");
+            }if(blastState ==1){
+              blastState = 0;
               emulator.serial0_send("rm temp.fa\n");
               self.postMessage({
                 "type" : "output",
