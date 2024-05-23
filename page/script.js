@@ -88,6 +88,8 @@ function getParameters() {
 async function segmentFile(){
     const param = getParameters();
     console.log(param);
+
+//Add Function to print
     const segmentronCode = 
 `import time
 import json
@@ -135,6 +137,8 @@ elapsed_time = end_time - start_time
 
 print(f"Finished Segmenting in {elapsed_time} seconds")
 `;
+
+
 
 //post message to web worker and activate timer
 async function startWebWorkerSegment() {

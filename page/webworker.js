@@ -85,6 +85,7 @@ self.onmessage = async (event) => {
   try {
     // make sure loading is done
     await pyodideReadyPromise;
+
     pyodide.setStdout({ batched: (msg) => self.postMessage({type: "output", msg})  });
     // Don't bother yet with this line, suppose our API is built in such a way:
     const {python, file, blast} = event.data;
@@ -95,8 +96,6 @@ self.onmessage = async (event) => {
     const content = await readFileAsync(file);
     const uint8ArrayContent = new Uint8Array(content);
     pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
-
-
 
     // Now is the easy part, the one that is similar to working in the main thread:
     if(blast){
@@ -115,7 +114,17 @@ with open("/temp.fa", "w") as f:
 
       await(v86ReadyPromise);
       await emulator.run();
-      await emulator.create_file("/root/temp.fa", fa_uint8ArrayContent);
+      var z = 0;
+      while(true){
+        try{
+          await emulator.create_file("/root/temp.fa", fa_uint8ArrayContent);
+          break;
+        }catch{
+          console.log("9front File system not ready yet")
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+
       
       var blastState = true;
       emulator.add_listener("serial0-output-byte", async function(byte){
@@ -149,9 +158,10 @@ with open("/temp.fa", "w") as f:
                   break;
                 }catch{
                   console.log("File changes not propagated, trying again")
-                  await new Promise(resolve => setTimeout(resolve, 10000));
+                  await new Promise(resolve => setTimeout(resolve, 1000));
                 }
               }
+
               const blast_blob = new Blob([blastOutput], { type: 'application/octet-stream' });
               const blastContent = await readFileAsync(blast_blob);
               const blast_uint8ArrayContent = new Uint8Array(blastContent);
