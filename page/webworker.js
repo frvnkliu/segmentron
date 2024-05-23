@@ -96,7 +96,7 @@ self.onmessage = async (event) => {
     const content = await readFileAsync(file);
     const uint8ArrayContent = new Uint8Array(content);
     pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
-
+    console.log("Python");
     // Now is the easy part, the one that is similar to working in the main thread:
     if(blast){
       //.dna to .fa
@@ -114,10 +114,9 @@ with open("/temp.fa", "w") as f:
 
       await(v86ReadyPromise);
       await emulator.run();
-      var z = 0;
       while(true){
         try{
-          await emulator.create_file("/root/temp.fa", fa_uint8ArrayContent);
+          await emulator.create_file("root/temp.fa", fa_uint8ArrayContent);
           break;
         }catch{
           console.log("9front File system not ready yet")
@@ -125,7 +124,8 @@ with open("/temp.fa", "w") as f:
         }
       }
 
-      
+      //3await emulator.create_file("root/temp.fa", fa_uint8ArrayContent);
+
       var blastState = true;
       emulator.add_listener("serial0-output-byte", async function(byte){
           var char = String.fromCharCode(byte);
@@ -158,7 +158,7 @@ with open("/temp.fa", "w") as f:
                   break;
                 }catch{
                   console.log("File changes not propagated, trying again")
-                  await new Promise(resolve => setTimeout(resolve, 1000));
+                  await new Promise(resolve => setTimeout(resolve, 10000));
                 }
               }
 
