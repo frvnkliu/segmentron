@@ -23,26 +23,35 @@ class multiprocessed_dynamic_programming:
                 finish_queue.put((None, e))  # Indicates an error occurred
                 break  # Exit the loop if an error occurs
     
-    def run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name, verbose):
+    def run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name, verbose = None, coarseness = 1):
         #results = [multiprocessing.Array(array_type, length) for array_type in types]
-        results = [np.empty(length, dtype=array_type) for array_type in types]
-        for i in range(length):
+        results = [np.zeros(length, dtype = array_type) for array_type in types]
+        for results_array in results:
+            for i in range(len(results_array)):
+                results_array[i] = -1
+        for i in range(0, length, coarseness):
             getattr(task_object, task_name)(i, results)
-            if (i % 1000 == 0) and verbose:
-                print(f"index {i} has been finished\n")
+            if verbose is not None:
+                verbose(i, length)
+        getattr(task_object, task_name)(length - 1, results)
         return results
 
-    def run_multiprocess_calculation(self, num_workers, length, types, protection_length, task_object, task_name, verbose):
+    def run_multiprocess_calculation(self, num_workers, length, types, protection_length, task_object, task_name, verbose, coarseness):
         assert (protection_length > 0)
-        self.protection_length = protection_length
+        self.protection_length = (protection_length // coarseness) * coarseness
+        if self.protection_length < protection_length:
+            self.protection_length = self.protection_length + coarseness
         if(num_workers == 1):
-            return self.run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name, verbose)
+            return self.run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name, verbose, coarseness)
         #Initialize Multiprocessing Queues
         task_queue = multiprocessing.Queue()
         finish_queue = multiprocessing.Queue()
 
         #Created Shared Array
-        results = [multiprocessing.Array(array_type, length) for array_type in types]
+        results = [multiprocessing.Array(array_type, length, lock = False) for array_type in types]
+        for results_array in results:
+            for i in range(len(results_array)):
+                results_array[i] = -1
 
         #Create Worker Processes
         workers = [multiprocessing.Process(target = self.consumer, args = (self, task_queue, finish_queue, task_object, task_name, results)) for _ in range(num_workers)]
@@ -55,11 +64,13 @@ class multiprocessed_dynamic_programming:
         processed = [False]*length
 
         #Task Creation
-        for i in range(protection_length):
+        for i in range(0, self.protection_length, coarseness):
             task_queue.put(i)
 
         min_unfinished_index = 0
         #Minimum index such that all indices less than min_unfinished_index are True
+
+        max_index = (length // coarseness) * coarseness
 
         while min_unfinished_index < length:
             # Collect New Finished Task
@@ -75,11 +86,14 @@ class multiprocessed_dynamic_programming:
 
             # Update min_unfinished_index and create new tasks
             while min_unfinished_index < length and processed[min_unfinished_index]:
-                if min_unfinished_index + protection_length < length: # Create new task
-                    task_queue.put(min_unfinished_index + protection_length)
-                if (min_unfinished_index % 1000 == 0) and verbose:
-                    print(f"index {min_unfinished_index} has been finished\n")
-                min_unfinished_index += 1
+                if min_unfinished_index + self.protection_length < length: # Create new task
+                    task_queue.put(min_unfinished_index + self.protection_length)
+                if (verbose is not None):
+                    verbose(i, length)
+                min_unfinished_index = min_unfinished_index + coarseness
+            if (min_unfinished_index > length and not processed[length - 1]):
+                min_unfinished_index = length - 1
+                task_queue.put(min_unfinished_index)
         #Get rid of worker
         for worker in workers:
             worker.terminate()
