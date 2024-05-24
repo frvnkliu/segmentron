@@ -6,6 +6,7 @@
     <title>Segmentron</title>
     <link rel="stylesheet" href="styles.css">
     <script type ="module" src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script type = "module" src="./libs/libv86.js"></script>
     <script type ="module" src = webworker.js></script>
     <script type ="module" src = script.js></script>
 </head>
@@ -23,7 +24,7 @@
                 <div class="file-container">
                     <label for="upload">Upload file ⓘ</label> 
                     <span class="tooltip">ⓘ Supported file types: .dna, .txt</span>
-                    <input type="file" id="upload" accept= ".dna" title="Supported file types: .dna"> 
+                    <input type="file" id="upload" accept= ".dna, .fa, .fasta" title="Supported file types: .dna"> 
                 </div>
                 <p>Example File: <a href="HLA2_Sergio_Test.dna">HLA2_Sergio_test.dna</a></p>
                 <br>
@@ -31,6 +32,7 @@
                     <label for="parameterSelectors">Parameters</label>
                     <div id="parameterSelectors">
                         <!--div><label>BLAST</label><input type="checkbox" name= "blast" unchecked></div-->
+                        <div><label>Blast</label> <input type="checkbox" name = "blast" checked></div>
                         <div><label>GC Count</label> <input type="checkbox" name = "GCCount" checked></div>
                         <div><label>MaxLength</label><input type="text" name="maxLen" value="3000"> </div>
                         <div><label>Min Length</label><input type="text" name="minLen" value= "1000"> </div>

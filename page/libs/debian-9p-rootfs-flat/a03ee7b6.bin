@@ -1,0 +1,4 @@
+sprintf(buffer,"C compiler          : gcc version 8.3.0 (Debian 8.3.0-6) \n");
+output_string(buffer);
+sprintf(buffer,"libc                : libc-2.28.so\n");
+output_string(buffer);

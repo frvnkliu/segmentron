@@ -1,0 +1,1416 @@
+Package: libpam0g
+Architecture: i386
+Auto-Installed: 1
+
+Package: debconf
+Architecture: i386
+Auto-Installed: 1
+
+Package: fdisk
+Architecture: i386
+Auto-Installed: 1
+
+Package: perl-base
+Architecture: i386
+Auto-Installed: 1
+
+Package: init-system-helpers
+Architecture: i386
+Auto-Installed: 1
+
+Package: libseccomp2
+Architecture: i386
+Auto-Installed: 1
+
+Package: diffutils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libaudit-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcom-err2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsemanage1
+Architecture: i386
+Auto-Installed: 1
+
+Package: sysvinit-utils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libfdisk1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpam-modules
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsystemd0
+Architecture: i386
+Auto-Installed: 1
+
+Package: base-passwd
+Architecture: i386
+Auto-Installed: 1
+
+Package: dash
+Architecture: i386
+Auto-Installed: 1
+
+Package: apt
+Architecture: i386
+Auto-Installed: 1
+
+Package: libacl1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmount1
+Architecture: i386
+Auto-Installed: 1
+
+Package: gcc-8-base
+Architecture: i386
+Auto-Installed: 1
+
+Package: libbz2-1.0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgpg-error0
+Architecture: i386
+Auto-Installed: 1
+
+Package: e2fsprogs
+Architecture: i386
+Auto-Installed: 1
+
+Package: zlib1g
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgmp10
+Architecture: i386
+Auto-Installed: 1
+
+Package: libc6
+Architecture: i386
+Auto-Installed: 1
+
+Package: util-linux
+Architecture: i386
+Auto-Installed: 1
+
+Package: coreutils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsepol1
+Architecture: i386
+Auto-Installed: 1
+
+Package: passwd
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpam-runtime
+Architecture: i386
+Auto-Installed: 1
+
+Package: libapt-pkg5.0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libncursesw6
+Architecture: i386
+Auto-Installed: 1
+
+Package: debianutils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libudev1
+Architecture: i386
+Auto-Installed: 1
+
+Package: adduser
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgcc1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libss2
+Architecture: i386
+Auto-Installed: 1
+
+Package: mount
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsemanage-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libext2fs2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libattr1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libblkid1
+Architecture: i386
+Auto-Installed: 1
+
+Package: dpkg
+Architecture: i386
+Auto-Installed: 1
+
+Package: libc-bin
+Architecture: i386
+Auto-Installed: 1
+
+Package: libtinfo6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpcre3
+Architecture: i386
+Auto-Installed: 1
+
+Package: sed
+Architecture: i386
+Auto-Installed: 1
+
+Package: tar
+Architecture: i386
+Auto-Installed: 1
+
+Package: mawk
+Architecture: i386
+Auto-Installed: 1
+
+Package: libuuid1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgcrypt20
+Architecture: i386
+Auto-Installed: 1
+
+Package: libselinux1
+Architecture: i386
+Auto-Installed: 1
+
+Package: liblz4-1
+Architecture: i386
+Auto-Installed: 1
+
+Package: gpgv
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsmartcols1
+Architecture: i386
+Auto-Installed: 1
+
+Package: grep
+Architecture: i386
+Auto-Installed: 1
+
+Package: login
+Architecture: i386
+Auto-Installed: 1
+
+Package: libhogweed4
+Architecture: i386
+Auto-Installed: 1
+
+Package: ncurses-bin
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpam-modules-bin
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdb5.3
+Architecture: i386
+Auto-Installed: 1
+
+Package: bsdutils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libnettle6
+Architecture: i386
+Auto-Installed: 1
+
+Package: ncurses-base
+Architecture: i386
+Auto-Installed: 1
+
+Package: bash
+Architecture: i386
+Auto-Installed: 1
+
+Package: findutils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcap-ng0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgnutls30
+Architecture: i386
+Auto-Installed: 1
+
+Package: libffi6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libunistring2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libp11-kit0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libzstd1
+Architecture: i386
+Auto-Installed: 1
+
+Package: gzip
+Architecture: i386
+Auto-Installed: 1
+
+Package: libtasn1-6
+Architecture: i386
+Auto-Installed: 1
+
+Package: liblzma5
+Architecture: i386
+Auto-Installed: 1
+
+Package: libstdc++6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libidn2-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: debian-archive-keyring
+Architecture: i386
+Auto-Installed: 1
+
+Package: libaudit1
+Architecture: i386
+Auto-Installed: 1
+
+Package: hostname
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdebconfclient0
+Architecture: i386
+Auto-Installed: 1
+
+Package: base-files
+Architecture: i386
+Auto-Installed: 1
+
+Package: tzdata
+Architecture: i386
+Auto-Installed: 1
+
+Package: libelf1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcap2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcap2-bin
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxtables12
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmnl0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmpc3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpython3.7-minimal
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxdmcp6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpthread-stubs0-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpcre16-3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmpx2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdevmapper1.02.1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libssh2-1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcroco3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libwebp6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libefivar1
+Architecture: i386
+Auto-Installed: 1
+
+Package: dmsetup
+Architecture: i386
+Auto-Installed: 1
+
+Package: libkrb5-3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgssapi-krb5-2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpangoft2-1.0-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libnghttp2-14
+Architecture: i386
+Auto-Installed: 1
+
+Package: libfontenc1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmbedtls12
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcups2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libimlib2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdbus-1-3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdrm-nouveau2
+Architecture: i386
+Auto-Installed: 1
+
+Package: python3-distutils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpcre3-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsasl2-modules-db
+Architecture: i386
+Auto-Installed: 1
+
+Package: linux-libc-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: xserver-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: liblist-moreutils-perl
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb-xfixes0
+Architecture: i386
+Auto-Installed: 1
+
+Package: vim-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcurl4
+Architecture: i386
+Auto-Installed: 1
+
+Package: libldap-2.4-2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmpfr6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libegl1
+Architecture: i386
+Auto-Installed: 1
+
+Package: xserver-xorg-core
+Architecture: i386
+Auto-Installed: 1
+
+Package: libllvm7
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgirepository-1.0-1
+Architecture: i386
+Auto-Installed: 1
+
+Package: gir1.2-gdkpixbuf-2.0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmbedcrypto3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libargon2-1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libegl-mesa0
+Architecture: i386
+Auto-Installed: 1
+
+Package: grub-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpciaccess0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb-present0
+Architecture: i386
+Auto-Installed: 1
+
+Package: ncbi-data
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpython2-stdlib
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgl1
+Architecture: i386
+Auto-Installed: 1
+
+Package: cpp-8
+Architecture: i386
+Auto-Installed: 1
+
+Package: dbus
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpng-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libkmod2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglapi-mesa
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpsl5
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpixman-1-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: python2.7-minimal
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxkbfile1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsqlite3-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: librsvg2-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxrender1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libicu63
+Architecture: i386
+Auto-Installed: 1
+
+Package: binutils
+Architecture: i386
+Auto-Installed: 1
+
+Package: cpp
+Architecture: i386
+Auto-Installed: 1
+
+Package: libbsd0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libffi-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libitm1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libavahi-common-data
+Architecture: i386
+Auto-Installed: 1
+
+Package: libexporter-tiny-perl
+Architecture: i386
+Auto-Installed: 1
+
+Package: libefiboot1
+Architecture: i386
+Auto-Installed: 1
+
+Package: perl-modules-5.28
+Architecture: i386
+Auto-Installed: 1
+
+Package: libavahi-common3
+Architecture: i386
+Auto-Installed: 1
+
+Package: python2.7
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgtk2.0-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: linux-base
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcursor1
+Architecture: i386
+Auto-Installed: 1
+
+Package: python3.7
+Architecture: i386
+Auto-Installed: 1
+
+Package: xtrans-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: liblocale-gettext-perl
+Architecture: i386
+Auto-Installed: 1
+
+Package: libthai-data
+Architecture: i386
+Auto-Installed: 1
+
+Package: python2
+Architecture: i386
+Auto-Installed: 1
+
+Package: python3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libk5crypto3
+Architecture: i386
+Auto-Installed: 1
+
+Package: grub2-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmtdev1
+Architecture: i386
+Auto-Installed: 1
+
+Package: udev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libselinux1-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: mime-support
+Architecture: i386
+Auto-Installed: 1
+
+Package: libegl1-mesa
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb-shm0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libepoxy0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libid3tag0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpcre32-3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsasl2-2
+Architecture: i386
+Auto-Installed: 1
+
+Package: zlib1g-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: x11-xkb-utils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libasan5
+Architecture: i386
+Auto-Installed: 1
+
+Package: readline-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb-render0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libquadmath0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libklibc
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb1-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmagic1
+Architecture: i386
+Auto-Installed: 1
+
+Package: xkb-data
+Architecture: i386
+Auto-Installed: 1
+
+Package: libterm-readkey-perl
+Architecture: i386
+Auto-Installed: 1
+
+Package: python
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmpdec2
+Architecture: i386
+Auto-Installed: 1
+
+Package: grub-pc
+Architecture: i386
+Auto-Installed: 1
+
+Package: fontconfig-config
+Architecture: i386
+Auto-Installed: 1
+
+Package: libx11-6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpython3.7-stdlib
+Architecture: i386
+Auto-Installed: 1
+
+Package: libisl19
+Architecture: i386
+Auto-Installed: 1
+
+Package: libexpat1
+Architecture: i386
+Auto-Installed: 1
+
+Package: kmod
+Architecture: i386
+Auto-Installed: 1
+
+Package: libapparmor1
+Architecture: i386
+Auto-Installed: 1
+
+Package: python3.7-minimal
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgbm1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxshmfence1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libapt-pkg-perl
+Architecture: i386
+Auto-Installed: 1
+
+Package: liblmdb0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsm6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmount-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libwayland-client0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libperl5.28
+Architecture: i386
+Auto-Installed: 1
+
+Package: grub-pc-bin
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpython-stdlib
+Architecture: i386
+Auto-Installed: 1
+
+Package: x11proto-core-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdrm-amdgpu1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgcc-8-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglib2.0-dev-bin
+Architecture: i386
+Auto-Installed: 1
+
+Package: fontconfig
+Architecture: i386
+Auto-Installed: 1
+
+Package: libtiff5
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxau-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: python3-minimal
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxau6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxaw7
+Architecture: i386
+Auto-Installed: 1
+
+Package: libatk1.0-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: librtmp1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcomposite1
+Architecture: i386
+Auto-Installed: 1
+
+Package: adwaita-icon-theme
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmagic-mgc
+Architecture: i386
+Auto-Installed: 1
+
+Package: libubsan1
+Architecture: i386
+Auto-Installed: 1
+
+Package: gir1.2-glib-2.0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxtst6
+Architecture: i386
+Auto-Installed: 1
+
+Package: librsvg2-2
+Architecture: i386
+Auto-Installed: 1
+
+Package: python2-minimal
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxi6
+Architecture: i386
+Auto-Installed: 1
+
+Package: pkg-config
+Architecture: i386
+Auto-Installed: 1
+
+Package: libkrb5support0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxt6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpython3-stdlib
+Architecture: i386
+Auto-Installed: 1
+
+Package: libfuse2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxdo3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgif7
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxinerama1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libldap-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgdbm6
+Architecture: i386
+Auto-Installed: 1
+
+Package: gcc-8
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxdmcp-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: fonts-dejavu-core
+Architecture: i386
+Auto-Installed: 1
+
+Package: ucf
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglib2.0-bin
+Architecture: i386
+Auto-Installed: 1
+
+Package: libkeyutils1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libmbedx509-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxmuu1
+Architecture: i386
+Auto-Installed: 1
+
+Package: vim-runtime
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxft2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpcre2-8-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglew2.1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxfont2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxrandr2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdrm2
+Architecture: i386
+Auto-Installed: 1
+
+Package: python3-lib2to3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglib2.0-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglx0
+Architecture: i386
+Auto-Installed: 1
+
+Package: shared-mime-info
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgomp1
+Architecture: i386
+Auto-Installed: 1
+
+Package: menu
+Architecture: i386
+Auto-Installed: 1
+
+Package: linux-image-4.19.0-26-686
+Architecture: i386
+Auto-Installed: 1
+
+Package: libutempter0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsepol1-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglu1-mesa
+Architecture: i386
+Auto-Installed: 1
+
+Package: hicolor-icon-theme
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxfixes3
+Architecture: i386
+Auto-Installed: 1
+
+Package: xxd
+Architecture: i386
+Auto-Installed: 1
+
+Package: libthai0
+Architecture: i386
+Auto-Installed: 1
+
+Package: uuid-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libfontconfig1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libx11-data
+Architecture: i386
+Auto-Installed: 1
+
+Package: libreadline7
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgtk2.0-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: keyboard-configuration
+Architecture: i386
+Auto-Installed: 1
+
+Package: binutils-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libunwind8
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgraphite2-3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgpm2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxxf86vm1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libx11-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglib2.0-data
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxdamage1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libjbig0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libc-dev-bin
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxml2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxmu6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libidn11
+Architecture: i386
+Auto-Installed: 1
+
+Package: binutils-i686-linux-gnu
+Architecture: i386
+Auto-Installed: 1
+
+Package: libbinutils
+Architecture: i386
+Auto-Installed: 1
+
+Package: fonts-noto-core
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpython2.7-minimal
+Architecture: i386
+Auto-Installed: 1
+
+Package: cpio
+Architecture: i386
+Auto-Installed: 1
+
+Package: libedit2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdrm-intel1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsensors-config
+Architecture: i386
+Auto-Installed: 1
+
+Package: libfreetype6
+Architecture: i386
+Auto-Installed: 1
+
+Package: xorg-sgml-doctools
+Architecture: i386
+Auto-Installed: 1
+
+Package: perl
+Architecture: i386
+Auto-Installed: 1
+
+Package: xauth
+Architecture: i386
+Auto-Installed: 1
+
+Package: lsb-base
+Architecture: i386
+Auto-Installed: 1
+
+Package: netcat-traditional
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcryptsetup12
+Architecture: i386
+Auto-Installed: 1
+
+Package: x11-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: gtk-update-icon-cache
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdrm-radeon1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxpm4
+Architecture: i386
+Auto-Installed: 1
+
+Package: libatomic1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libssl1.1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libatk1.0-data
+Architecture: i386
+Auto-Installed: 1
+
+Package: libharfbuzz0b
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcc1-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpcrecpp0v5
+Architecture: i386
+Auto-Installed: 1
+
+Package: libjson-c3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libgdbm-compat4
+Architecture: i386
+Auto-Installed: 1
+
+Package: libice6
+Architecture: i386
+Auto-Installed: 1
+
+Package: gettext-base
+Architecture: i386
+Auto-Installed: 1
+
+Package: libcairo2
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpython2.7-stdlib
+Architecture: i386
+Auto-Installed: 1
+
+Package: xbitmaps
+Architecture: i386
+Auto-Installed: 1
+
+Package: x11proto-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libavahi-client3
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb-glx0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdpkg-perl
+Architecture: i386
+Auto-Installed: 1
+
+Package: libblkid-dev
+Architecture: i386
+Auto-Installed: 1
+
+Package: libip4tc0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb-dri2-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxkbcommon0
+Architecture: i386
+Auto-Installed: 1
+
+Package: klibc-utils
+Architecture: i386
+Auto-Installed: 1
+
+Package: libsensors5
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb-dri3-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: python-minimal
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglib2.0-0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libjpeg62-turbo
+Architecture: i386
+Auto-Installed: 1
+
+Package: initramfs-tools-core
+Architecture: i386
+Auto-Installed: 1
+
+Package: sensible-utils
+Architecture: i386
+Auto-Installed: 1
+
+Package: initramfs-tools
+Architecture: i386
+Auto-Installed: 1
+
+Package: libwayland-server0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libx11-xcb1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libfribidi0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxcb-sync1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libxext6
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdatrie1
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglx-mesa0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libglvnd0
+Architecture: i386
+Auto-Installed: 1
+
+Package: libregexp-assemble-perl
+Architecture: i386
+Auto-Installed: 1
+
+Package: libdrm-common
+Architecture: i386
+Auto-Installed: 1
+
+Package: libpng16-16
+Architecture: i386
+Auto-Installed: 1
+
+Package: libevdev2
+Architecture: i386
+Auto-Installed: 1
+
