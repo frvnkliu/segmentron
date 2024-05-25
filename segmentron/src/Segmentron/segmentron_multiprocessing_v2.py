@@ -89,7 +89,7 @@ class multiprocessed_dynamic_programming:
                 if min_unfinished_index + self.protection_length < length: # Create new task
                     task_queue.put(min_unfinished_index + self.protection_length)
                 if (verbose is not None):
-                    verbose(i, length)
+                    verbose(min_unfinished_index, length)
                 min_unfinished_index = min_unfinished_index + coarseness
             if (min_unfinished_index > length and not processed[length - 1]):
                 min_unfinished_index = length - 1
