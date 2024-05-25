@@ -2,12 +2,13 @@ import snapgene_reader as sgreader
 from typing import List, Callable
 from tqdm import tqdm
 import time
-import scoring_forbidden_regions
-import scoring_length
-import scoring_microhomologies
-import scoring_overlap_composition
-import scoring_accumulator
-import segmentron_multiprocessing_v2 as segmentron_multiprocessing
+import json
+from . import scoring_forbidden_regions
+from . import scoring_length
+from . import scoring_microhomologies
+from . import scoring_overlap_composition
+from . import scoring_accumulator
+from . import segmentron_multiprocessing_v2 as segmentron_multiprocessing
 
 class segmentron:
     #Define stored variable types
@@ -26,6 +27,23 @@ class segmentron:
     #Stored arrays for usage in dynamic programming
     optimal_scores: List[float]
     optimal_cuts: List[int]
+
+    def encodeSegmentron(self, blockIndex):
+        #encodes the current segmentation
+        data = {
+            "parameters": self.parameters,
+            "segmentation": {
+                "segmentation": self.segmentation,
+                "optimal_scores": self.optimal_scores,
+                "optimal_cuts": self.optimal_cuts,
+                "blockIndex": blockIndex
+            }
+        }
+        file_path = "segmentron.json"
+
+        with open(file_path, 'w') as json_file:
+            json.dump(self.to_dict(), json_file)
+
 
     def __init__(self, preprocessing_functions, segment_scoring_functions, accumulating_function, parameters):
         """Initializes a segmentron class with a given list of scoring functions, a function to combine these scores, and a set of parameters
