@@ -1,1 +1,1 @@
-from Segmentron.segmentron.src.Segmentron.segmentron_v13 import segmentron
+from Segmentron.segmentron_v13 import segmentron
