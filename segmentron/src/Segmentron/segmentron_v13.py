@@ -112,6 +112,8 @@ class segmentron:
             #Write helper function and call it here
             self.optimal_cuts, self.optimal_scores = self.segment_multiprocessing(coarseness, multiprocessing_cores)
         else:
+            #Get the verbose function if it exists
+            verbose = self.parameters.get("verbose", None)
             #Store scores for the optimal segmentations for any subsequence starting from index 0
             self.optimal_scores = [-1 for i in range(sequence_length + 1)]
             #Store optimal segmentation for any subsequence starting from index 0
@@ -126,6 +128,8 @@ class segmentron:
                 self.segment_subsequence(current_index, [self.optimal_cuts, self.optimal_scores])
                 #Update progress bar
                 progress_bar.update(1)
+                if verbose is not None:
+                    verbose(current_cut, sequence_length)
             #Ensure that the entire sequence is sequenced in case it was skipped due to the coarseness setting
             self.segment_subsequence(sequence_length, [self.optimal_cuts, self.optimal_scores])
             progress_bar.update(1)
