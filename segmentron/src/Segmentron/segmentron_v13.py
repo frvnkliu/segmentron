@@ -8,7 +8,7 @@ from . import scoring_length
 from . import scoring_microhomologies
 from . import scoring_overlap_composition
 from . import scoring_accumulator
-from . import segmentron_multiprocessing_v1 as segmentron_multiprocessing
+from . import segmentron_multiprocessing_v2 as segmentron_multiprocessing
 
 class segmentron:
     #Define stored variable types
@@ -27,6 +27,23 @@ class segmentron:
     #Stored arrays for usage in dynamic programming
     optimal_scores: List[float]
     optimal_cuts: List[int]
+
+    def encodeSegmentron(self, blockIndex):
+        #encodes the current segmentation
+        data = {
+            "parameters": self.parameters,
+            "segmentation": {
+                "segmentation": self.segmentation,
+                "optimal_scores": self.optimal_scores,
+                "optimal_cuts": self.optimal_cuts,
+                "blockIndex": blockIndex
+            }
+        }
+        file_path = "segmentron.json"
+
+        with open(file_path, 'w') as json_file:
+            json.dump(self.to_dict(), json_file)
+
 
     def __init__(self, preprocessing_functions, segment_scoring_functions, accumulating_function, parameters):
         """Initializes a segmentron class with a given list of scoring functions, a function to combine these scores, and a set of parameters
@@ -55,28 +72,10 @@ class segmentron:
         #Set to store the segmentation for future operations following every segmentation
         self.segmentation = []
 
-    def encodeSegmentron(self, blockIndex):
-        #encodes the current segmentation
-        data = {
-            "parameters": self.parameters,
-            "segmentation": {
-                "segmentation": self.segmentation,
-                "optimal_scores": self.optimal_scores,
-                "optimal_cuts": self.optimal_cuts,
-                "blockIndex": blockIndex
-            }
-        }
-        file_path = "segmentron.json"
-
-        with open(file_path, 'w') as json_file:
-            json.dump(self.to_dict(), json_file)
-
     #Goes through all preprocessing functions given and collects all information necessary
     def preprocess(self):
         for preprocessing_function in self.preprocessing_functions:
             preprocessing_function(self.parameters)
-        if self.parameters.get("verbose", False):
-            print("Preprocessing finished")
         return None
     
     #Segment a sequence by reading from a given filepath
@@ -102,8 +101,6 @@ class segmentron:
         sequence_length = len(sequence)
         #Set up timer
         start_time = time.perf_counter()
-        if self.parameters.get("verbose", False):
-            print(f"Beginning the segmentation of the sequence of length {sequence_length}")
         #Pull out sequence and other parameters from parameters list ahead of time
         #Store sequence and forbidden_regions for possible future operations
         self.parameters["sequence"] = sequence.upper()
@@ -115,7 +112,8 @@ class segmentron:
             #Write helper function and call it here
             self.optimal_cuts, self.optimal_scores = self.segment_multiprocessing(coarseness, multiprocessing_cores)
         else:
-            print("beginning segmentation")
+            #Get the verbose function if it exists
+            verbose = self.parameters.get("verbose", None)
             #Store scores for the optimal segmentations for any subsequence starting from index 0
             self.optimal_scores = [-1 for i in range(sequence_length + 1)]
             #Store optimal segmentation for any subsequence starting from index 0
@@ -130,8 +128,8 @@ class segmentron:
                 self.segment_subsequence(current_index, [self.optimal_cuts, self.optimal_scores])
                 #Update progress bar
                 progress_bar.update(1)
-                if ((current_index / coarseness) % 1000 == 0) and self.parameters.get("verbose", False):
-                    print(f"index {current_index} has been finished\n")
+                if verbose is not None:
+                    verbose(current_cut, sequence_length)
             #Ensure that the entire sequence is sequenced in case it was skipped due to the coarseness setting
             self.segment_subsequence(sequence_length, [self.optimal_cuts, self.optimal_scores])
             progress_bar.update(1)
@@ -160,7 +158,7 @@ class segmentron:
         sequence_length = len(sequence)
         min_length = self.parameters["min_length"]
         multiprocesser = segmentron_multiprocessing.multiprocessed_dynamic_programming
-        return multiprocesser.run_multiprocess_calculation(multiprocesser, multiprocessing_cores, sequence_length + 1, ["i", "f"], min_length, self, "segment_subsequence", self.parameters)
+        return multiprocesser.run_multiprocess_calculation(multiprocesser, multiprocessing_cores, sequence_length + 1, ["i", "f"], min_length, self, "segment_subsequence", self.parameters.get("verbose", None), coarseness)
 
     #Checks previous entries in stored arrays to find an optimal segmentation for a subsequence from 0 to a given ending_index
     def segment_subsequence(self, ending_index, storage_arrays):
@@ -336,10 +334,10 @@ if __name__ == "__main__":
                     "min_microhomology_length" : 8,
                     "max_microhomology_length" : 19,
                     "forbidden_region_class_count" : 1,
-                    "forbidden_regions_from_file" : False,
+                    "forbidden_regions_from_input" : False,
                     "forbidden_region_generation" : False,
                     "color" : "#ff0000",
-                    "verbose" : False
+                    "verbose" : None
                 }
     segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
     filepath = "./Hba_Sergio_Test.dna" 
@@ -348,7 +346,7 @@ if __name__ == "__main__":
     segmenter.write_subsequences_to_txt("segmentation_multiprocessed.txt")
     segmenter.write_segments_to_bed("segmentation_multiprocessed.bed")
     segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
-    parameters["forbidden_regions_from_file"] = True
+    parameters["forbidden_regions_from_input"] = True
     parameters["forbidden_region_generation"] = True
     segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
     filepath = "./Hba_Sergio_Test.dna" 
