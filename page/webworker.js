@@ -44,7 +44,7 @@ async function loadPyodideAndPackages() {
   await micropip.install("snapgene_reader");
   await micropip.install("typing");
   await micropip.install("Bio");
-  await micropip.install("https://test-files.pythonhosted.org/packages/d7/8b/6ef135c12b2050b1bc2e7642e487f45c6b48544b19246d5d16d0f1ef7ba7/Segmentron-12.0.0-py3-none-any.whl");
+  await micropip.install("https://test-files.pythonhosted.org/packages/ea/b6/e2b775370a773779df77f0db80f7dbc75f4014728a7c410751529076a65e/Segmentron-13.1.0-py3-none-any.whl");
   await self.pyodide.loadPackage(["numpy", "pytz"]);
 }
 let pyodideReadyPromise = loadPyodideAndPackages();
@@ -162,7 +162,7 @@ with open("/temp.fa", "w") as f:
                   break;
                 }catch{
                   console.log("File changes not propagated, trying again")
-                  await new Promise(resolve => setTimeout(resolve, 10000));
+                  await new Promise(resolve => setTimeout(resolve, 5000));
                 }
               }
 

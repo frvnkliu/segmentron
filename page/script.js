@@ -106,7 +106,11 @@ import Segmentron.scoring_accumulator as scoring_accumulator
 end_time = time.time()
 elapsed_time = end_time - start_time
 
-print(f"Finished import in {elapsed_time} seconds")
+print(f"Finished import in {elapsed_time:.2f} seconds")
+
+def verbose(i, total_length):
+    if(i%1000==0):
+        print(f'Progress/{i}/{total_length}')
 
 start_time = time.time()
 segment_scoring_functions = [scoring_length.length_score, scoring_forbidden_regions.forbidden_region_score,${param["GCCount"]?"scoring_overlap_composition.overlap_composition_score,":""} scoring_forbidden_regions.forbidden_region_class_score, scoring_microhomologies.microhomology_score]
@@ -122,12 +126,13 @@ parameters = {
                 "forbidden_regions_from_file": False, 
                 "forbidden_region_class_count" : 1,
                 "forbidden_region_generation" : ${param["blast"]?"True":"False"},
-                "color" : "#ff0000"
+                "color" : "#ff0000", 
+                "verbose" : verbose
             }
 segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
 filepath = "/sequence.dna"
 print("Start Scoring")
-total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 0, coarseness = 1)
+total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 1, coarseness = 1)
 segmenter.print_results()
 segmenter.write_subsequences_to_txt("/segmentation.txt")
 segmenter.write_segments_to_bed("/segmentation.bed")
