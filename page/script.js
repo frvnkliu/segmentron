@@ -90,7 +90,8 @@ function getParameters() {
 function setLoadingProgress(currCt, totalCt) {
     var loadingBar = document.getElementById('loadingBar');
     loadingBar.style.width = 100*currCt/totalCt+ '%';
-    loadingBar.innerHTML = currCt + "   ";
+    document.getElementById('percentText').innerHTML = `${Math.floor(100*currCt/totalCt)}%`;
+    document.getElementById('progressText').innerHTML = `${currCt}/${totalCt} nt`;
 }
 
 async function segmentFile(){

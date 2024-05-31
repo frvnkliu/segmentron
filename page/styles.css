@@ -162,7 +162,7 @@ label {
 }
 
 .hidden{
-    /*display: none;*/
+    display: none;
     /*background-color: rgb(125, 125, 125);*/
 }
 
@@ -264,14 +264,15 @@ textarea {
 }
 
 #loadingBarContainer {
-    width: 80%;
+    width: 100%;
     background-color: #f3f3f3;
     border: 1px solid #ccc;
     position: relative;
+    padding-bottom: 3 px;
   }
   
-  #loadingBar {
-    width: 0;
+#loadingBar {
+    width: 0%;
     height: 30px;
     background-color: #4caf50;
     transition: width 0.3s;
@@ -279,4 +280,18 @@ textarea {
     align-items: center; /* Vertically center the text */
     justify-content: flex-end; /* Right-align the text */
     color: white; /* Set the text color for better visibility */
-  }
+}
+
+#percentText{
+    padding-right: 10px;
+}
+
+#barContainer{
+    width: 80%;
+    text-align: right;
+}
+
+#progressText{
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
