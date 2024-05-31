@@ -162,7 +162,7 @@ label {
 }
 
 .hidden{
-    display: none;
+    /*display: none;*/
     /*background-color: rgb(125, 125, 125);*/
 }
 
@@ -233,19 +233,6 @@ label {
     margin-bottom: 20px; /* Add some bottom margin to create space below the parameterSection */
 }
 
-#loading-bar {
-    width: 80%;
-    height: 20px;
-    background-color: #ddd;
-    margin-top: 50px;
-}
-
-#progress-bar {
-    height: 100%;
-    width:50%;
-    background-color: #4caf50;
-}
-
 #restartButton{
     background-color: #6a6a6a;
 }
@@ -275,3 +262,21 @@ textarea {
     display: inline-block;
     margin-bottom: 20px;
 }
+
+#loadingBarContainer {
+    width: 80%;
+    background-color: #f3f3f3;
+    border: 1px solid #ccc;
+    position: relative;
+  }
+  
+  #loadingBar {
+    width: 0;
+    height: 30px;
+    background-color: #4caf50;
+    transition: width 0.3s;
+    display: flex;
+    align-items: center; /* Vertically center the text */
+    justify-content: flex-end; /* Right-align the text */
+    color: white; /* Set the text color for better visibility */
+  }

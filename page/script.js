@@ -19,7 +19,7 @@ async function loadPackages() {
 };
 
 const worker = new Worker('./webworker.js');
-
+var currCt, totalLen;
 worker.onmessage = function(event){
     console.log("Message received from worker");
     console.log(event);
@@ -40,11 +40,12 @@ worker.onmessage = function(event){
         const progressMsg = document.getElementById("progressMsg")
         progressMsg.value += `\n${results["msg"]}`;
         progressMsg.scrollTop = progressMsg.scrollHeight;
-        const pattern = /^A total of (\d+)/;
-        const match = results["msg"].match(pattern);
-        if(match){
-            const indices =  parseInt(match[1]);
-            console.log("Progress: " + indices)
+        if(results["msg"].indexOf("Progress") == 0){
+            [,currCt, totalLen] = results["msg"].split("/").map(x => parseInt(x));
+            setLoadingProgress(currCt, totalLen);
+        }else if(results["msg"].indexOf("This function")==0){
+            setLoadingProgress(totalLen, totalLen);
+            document.getElementById('loadingBar').style.backgroundColor = '#007bff';
         }
     }
 }
@@ -63,7 +64,7 @@ function readFileAsync(file) {
             reject(error);
         };
         reader.readAsArrayBuffer(file);
-    });
+    }); 
 }
 
 
@@ -85,6 +86,13 @@ function getParameters() {
 /*
     Starts segmentation from a file
 */
+
+function setLoadingProgress(currCt, totalCt) {
+    var loadingBar = document.getElementById('loadingBar');
+    loadingBar.style.width = 100*currCt/totalCt+ '%';
+    loadingBar.innerHTML = currCt + "   ";
+}
+
 async function segmentFile(){
     const param = getParameters();
     console.log(param);
@@ -126,7 +134,7 @@ parameters = {
                 "forbidden_regions_from_file": False, 
                 "forbidden_region_class_count" : 1,
                 "forbidden_region_generation" : ${param["blast"]?"True":"False"},
-                "color" : "#ff0000", 
+                "color" : "#ff0000",
                 "verbose" : verbose
             }
 segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
