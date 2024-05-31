@@ -233,19 +233,6 @@ label {
     margin-bottom: 20px; /* Add some bottom margin to create space below the parameterSection */
 }
 
-#loading-bar {
-    width: 80%;
-    height: 20px;
-    background-color: #ddd;
-    margin-top: 50px;
-}
-
-#progress-bar {
-    height: 100%;
-    width:50%;
-    background-color: #4caf50;
-}
-
 #restartButton{
     background-color: #6a6a6a;
 }
@@ -274,4 +261,37 @@ textarea {
     height: 40px;
     display: inline-block;
     margin-bottom: 20px;
+}
+
+#loadingBarContainer {
+    width: 100%;
+    background-color: #f3f3f3;
+    border: 1px solid #ccc;
+    position: relative;
+    padding-bottom: 3 px;
+  }
+  
+#loadingBar {
+    width: 0%;
+    height: 30px;
+    background-color: #4caf50;
+    transition: width 0.3s;
+    display: flex;
+    align-items: center; /* Vertically center the text */
+    justify-content: flex-end; /* Right-align the text */
+    color: white; /* Set the text color for better visibility */
+}
+
+#percentText{
+    padding-right: 10px;
+}
+
+#barContainer{
+    width: 80%;
+    text-align: right;
+}
+
+#progressText{
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
