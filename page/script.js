@@ -141,7 +141,7 @@ parameters = {
 segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
 filepath = "/sequence.dna"
 print("Start Scoring")
-total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 1, coarseness = 1)
+total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 0, coarseness = 1)
 segmenter.print_results()
 segmenter.write_subsequences_to_txt("/segmentation.txt")
 segmenter.write_segments_to_bed("/segmentation.bed")
