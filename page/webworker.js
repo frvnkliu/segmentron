@@ -90,14 +90,109 @@ self.onmessage = async (event) => {
     // Don't bother yet with this line, suppose our API is built in such a way:
     const {python, file, blast} = event.data;
     // The worker copies the context in its own "memory" (an object mapping name to values)
-    /*for (const key of Object.keys(context)) {
-      self[key] = context[key];
-    }*/
     const content = await readFileAsync(file);
     const uint8ArrayContent = new Uint8Array(content);
     pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
-    console.log("Python");
     // Now is the easy part, the one that is similar to working in the main thread:
+    if(blast){
+      let blastStartTime = Date.now(); // Get the current time in milliseconds
+      //.dna to .fa
+      await pyodide.runPythonAsync(
+`import snapgene_reader as sgreader
+sequence = sgreader.snapgene_file_to_dict("/sequence.dna")["seq"]
+with open("/temp.fa", "w") as f:
+  f.write(">seq\\n" + sequence)`
+      );
+      self.postMessage({
+        "type" : "output",
+        "msg": "Starting Blast Query\n"
+      });
+      //create blast_results.xml
+      const fa_file =pyodide.FS.readFile("/temp.fa");
+      const fa_blob = new Blob([fa_file],  {type: "application/octet-stream"});
+      const fa_content = await readFileAsync(fa_blob);
+      const fa_uint8ArrayContent = new Uint8Array(fa_content);
+
+      await(v86ReadyPromise);
+      await emulator.run();
+      while(true){
+        try{
+          await emulator.create_file("root/temp.fa", fa_uint8ArrayContent);
+          break;
+        }catch{
+          console.log("9front File system not ready yet")
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+
+      var blastState = 2;
+      emulator.add_listener("serial0-output-byte", async function(byte){
+          var char = String.fromCharCode(byte);
+          if(char === "\r")
+          {
+              return;
+          }
+
+          data += char;
+
+          if(data.endsWith(":~#"))
+          {
+            if(blastState == 2){
+              //sync
+              blastState = 1;
+              emulator.serial0_send("sync\n");
+            }if(blastState ==1){
+              blastState = 0;
+              emulator.serial0_send("rm temp.fa\n");
+              let blastEndTime = Date.now(); 
+              self.postMessage({
+                "type" : "output",
+                "msg": `Finished Blast Query (${((blastEndTime-blastStartTime)/1000).toFixed(2)} seconds)\n`
+              });
+              //read file from v86
+
+              var blastOutput;
+              while(true){
+                try{
+                  blastOutput = await emulator.read_file("root/output.xml");
+                  break;
+                }catch{
+                  console.log("File changes not propagated, trying again")
+                  await new Promise(resolve => setTimeout(resolve, 5000));
+                }
+              }
+
+              const blast_blob = new Blob([blastOutput], { type: 'application/octet-stream' });
+              const blastContent = await readFileAsync(blast_blob);
+              const blast_uint8ArrayContent = new Uint8Array(blastContent);
+              //write contents into pyodide
+              pyodide.FS.writeFile("blast_results.xml", blast_uint8ArrayContent);
+              runPython(python);
+            }
+          }
+      });
+      emulator.serial0_send("blastn -query temp.fa -subject temp.fa -out output.xml -outfmt 5 -gapopen 5 -gapextend 5 -perc_identity 80 -strand both -word_size 20\n");
+    }else{
+      runPython(python);
+    }
+  } catch (error) {
+    self.postMessage({error: error.message});
+  }
+};
+
+/*
+self.onmessage = async (event) => {
+  try {
+    // make sure loading is done
+    await pyodideReadyPromise;
+
+    pyodide.setStdout({ batched: (msg) => self.postMessage({type: "output", msg})  });
+    // Don't bother yet with this line, suppose our API is built in such a way:
+    const {python, file, blast} = event.data;
+    const content = await readFileAsync(file);
+    const uint8ArrayContent = new Uint8Array(content);
+    pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
+3    // Now is the easy part, the one that is similar to working in the main thread:
     if(blast){
       //.dna to .fa
       await pyodide.runPythonAsync(
@@ -138,10 +233,6 @@ with open("/temp.fa", "w") as f:
 
           if(data.endsWith(":~#"))
           {
-            /*self.postMessage({
-              "type" : "output",
-              "msg": "OutputTest:\n" + data + "\n"
-            });*/
             if(blastState == 2){
               //sync
               blastState = 1;
@@ -182,4 +273,4 @@ with open("/temp.fa", "w") as f:
   } catch (error) {
     self.postMessage({error: error.message});
   }
-};
+};*/

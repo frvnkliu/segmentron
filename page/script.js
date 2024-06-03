@@ -36,16 +36,18 @@ worker.onmessage = function(event){
         document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
         alert("Segments are ready!");
     }else if(results["type"] == "output"){
-        console.log("Message From Worker: ", results["msg"]);
-        const progressMsg = document.getElementById("progressMsg")
-        progressMsg.value += `\n${results["msg"]}`;
-        progressMsg.scrollTop = progressMsg.scrollHeight;
+        //progressMsg.scrollTop = progressMsg.scrollHeight;
         if(results["msg"].indexOf("Progress") == 0){
             [,currCt, totalLen] = results["msg"].split("/").map(x => parseInt(x));
             setLoadingProgress(currCt, totalLen);
-        }else if(results["msg"].indexOf("This function")==0){
-            setLoadingProgress(totalLen, totalLen);
-            document.getElementById('loadingBar').style.backgroundColor = '#007bff';
+        }else{
+            console.log("Message From Worker: ", results["msg"]);
+            const progressMsg = document.getElementById("progressMsg")
+            progressMsg.value += `\n${results["msg"]}`;
+            if(results["msg"].indexOf("This function")==0){
+                setLoadingProgress(totalLen, totalLen);
+                document.getElementById('loadingBar').style.backgroundColor = '#007bff';
+            }
         }
     }
 }
