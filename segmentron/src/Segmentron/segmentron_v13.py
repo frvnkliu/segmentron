@@ -321,37 +321,3 @@ class segmentron:
                 #Write forbidden regions to the bed file
                 f.write(f"0\t{forbidden_regions[i][0]}\t{forbidden_regions[i][1]}\tForbidden Region {i + 1}\t0\t.\t0\t0\t255,0,0\n")
         return filepath
-    
-#Test code
-if __name__ == "__main__":
-    segment_scoring_functions = [scoring_length.length_score, scoring_forbidden_regions.forbidden_region_score, scoring_overlap_composition.overlap_composition_score, scoring_forbidden_regions.forbidden_region_class_score, scoring_microhomologies.microhomology_score]
-    preprocessing_functions = [scoring_forbidden_regions.forbidden_regions, scoring_overlap_composition.GC_proportions, scoring_microhomologies.relevant_microhomologies]
-    parameters = {
-                    "max_length" : 3000,
-                    "min_length" : 1000,
-                    "overlap" : 100,
-                    "microhomology_distance" : 20,
-                    "min_microhomology_length" : 8,
-                    "max_microhomology_length" : 19,
-                    "forbidden_region_class_count" : 1,
-                    "forbidden_regions_from_input" : False,
-                    "forbidden_region_generation" : False,
-                    "color" : "#ff0000",
-                    "verbose" : None
-                }
-    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
-    filepath = "./Hba_Sergio_Test.dna" 
-    total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 1, coarseness = 1)
-    segmenter.print_results()
-    segmenter.write_subsequences_to_txt("segmentation_multiprocessed.txt")
-    segmenter.write_segments_to_bed("segmentation_multiprocessed.bed")
-    segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
-    parameters["forbidden_regions_from_input"] = True
-    parameters["forbidden_region_generation"] = True
-    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
-    filepath = "./Hba_Sergio_Test.dna" 
-    total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 4, coarseness = 1)
-    segmenter.print_results()
-    segmenter.write_subsequences_to_txt("segmentation.txt")
-    segmenter.write_segments_to_bed("segmentation.bed")
-    segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions.bed")
