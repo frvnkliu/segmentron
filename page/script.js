@@ -134,7 +134,7 @@ parameters = {
                 "min_microhomology_length" : ${param["minMicroLen"]},
                 "max_microhomology_length" : ${param["maxMicroLen"]},
                 "forbidden_regions_from_xml": ${param["blast"]?"\"blast_results\"":"None"},
-                "forbidden_regions_from_file": False, 
+                "forbidden_regions_from_file": True, 
                 "forbidden_region_class_count" : 1,
                 "forbidden_region_generation" : ${param["blast"]?"True":"False"},
                 "color" : "#ff0000",
