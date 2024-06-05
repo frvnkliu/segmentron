@@ -3,12 +3,7 @@ from typing import List, Callable
 from tqdm import tqdm
 import time
 import json
-from . import scoring_forbidden_regions
-from . import scoring_length
-from . import scoring_microhomologies
-from . import scoring_overlap_composition
-from . import scoring_accumulator
-from . import segmentron_multiprocessing_v2 as segmentron_multiprocessing
+from .segmentron_multiprocessing_v2 import multiprocessed_dynamic_programming
 
 class segmentron:
     #Define stored variable types
@@ -27,23 +22,6 @@ class segmentron:
     #Stored arrays for usage in dynamic programming
     optimal_scores: List[float]
     optimal_cuts: List[int]
-
-    def encodeSegmentron(self, blockIndex):
-        #encodes the current segmentation
-        data = {
-            "parameters": self.parameters,
-            "segmentation": {
-                "segmentation": self.segmentation,
-                "optimal_scores": self.optimal_scores,
-                "optimal_cuts": self.optimal_cuts,
-                "blockIndex": blockIndex
-            }
-        }
-        file_path = "segmentron.json"
-
-        with open(file_path, 'w') as json_file:
-            json.dump(self.to_dict(), json_file)
-
 
     def __init__(self, preprocessing_functions, segment_scoring_functions, accumulating_function, parameters):
         """Initializes a segmentron class with a given list of scoring functions, a function to combine these scores, and a set of parameters
@@ -157,7 +135,7 @@ class segmentron:
         sequence = self.parameters["sequence"]
         sequence_length = len(sequence)
         min_length = self.parameters["min_length"]
-        multiprocesser = segmentron_multiprocessing.multiprocessed_dynamic_programming
+        multiprocesser = multiprocessed_dynamic_programming
         return multiprocesser.run_multiprocess_calculation(multiprocesser, multiprocessing_cores, sequence_length + 1, ["i", "f"], min_length, self, "segment_subsequence", self.parameters.get("verbose", None), coarseness)
 
     #Checks previous entries in stored arrays to find an optimal segmentation for a subsequence from 0 to a given ending_index
