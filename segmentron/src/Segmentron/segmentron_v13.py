@@ -56,7 +56,7 @@ class segmentron:
         return None
     
     #Segment a sequence by reading from a given filepath
-    def segment_from_file(self, filepath, coarseness = 1, multiprocessing_cores = 0):
+    def segment_from_snapgene(self, filepath, coarseness = 1, multiprocessing_cores = 0):
         """Given a file path to a valid snapgene file, the segmentron will read the sequence and forbidden regions from the file
         Since the given file may have multiple features, only features marked with the color red (#ff0000) will be counted as forbidden regions
         This function returns the optimal score and the corresponding optimal segmentation by calling a helper function
