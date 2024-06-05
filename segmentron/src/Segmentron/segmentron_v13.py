@@ -2,7 +2,6 @@ import snapgene_reader as sgreader
 from typing import List, Callable
 from tqdm import tqdm
 import time
-import json
 from .segmentron_multiprocessing_v2 import multiprocessed_dynamic_programming
 
 class segmentron:
