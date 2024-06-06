@@ -37,7 +37,7 @@ def return_repeats(sequence, read_from_file):
         #Open output file
         result_handle = open("blast_results.xml")
     else:
-        result_handle = open(read_from_file + ".xml")
+        result_handle = open(read_from_file)
     #Read output file
     blast_record = NCBIXML.read(result_handle)
     #List of matches found
@@ -189,22 +189,28 @@ def forbidden_regions(parameters):
     forbidden_regions = []
     #Default value for forbidden_region_generation is True
     forbidden_region_generation = parameters.get("forbidden_region_generation", True)
-    #Default value for forbidden_regions_from_file is False
-    forbidden_regions_from_file = parameters.get("forbidden_regions_from_file", False)
-    if not (forbidden_region_generation or forbidden_regions_from_file):
+    #Default value for forbidden_regions_from_input is False
+    forbidden_regions_from_input = parameters.get("forbidden_regions_from_input", False)
+    if not (forbidden_region_generation or forbidden_regions_from_input):
         parameters["forbidden_regions"] = forbidden_regions
         parameters["forbidden_region_classes"] = [forbidden_regions]
         return 0
-    #Check if forbidden regions need to be read from the file
-    if (parameters["forbidden_regions_from_file"]):
-        #Check if forbidden regions need to be grouped into classes
-        if forbidden_region_class_count == 1:
-            #Call helper function to read forbidden regions from the file
-            forbidden_region_read(parameters)
-        #Group forbidden regions into classes if necessary
+    #Set forbidden_regions_from_input to False if the file type is unsupported
+    if (forbidden_regions_from_input):
+        filepath = parameters["filepath"]
+        extension = filepath.split('.')[-1]
+        parameters["filepath"] = filepath
+        #Read forbidden regions from dna file
+        if(extension == 'dna'):
+            #Check if forbidden regions need to be grouped into classes
+            if forbidden_region_class_count == 1:
+                #Call helper function to read forbidden regions from the file
+                forbidden_region_read(parameters)
+            #Group forbidden regions into classes if necessary
+            else:
+                forbidden_region_classes_read(parameters)
         else:
-            forbidden_region_classes_read(parameters)
-    #Check if forbidden regions need to be generated
+            print("Unsupported file type, forbidden regions were unable to be read")
     if (parameters["forbidden_region_generation"]):
         parameters["forbidden_regions"].extend(return_repeats(parameters["sequence"], parameters.get("forbidden_regions_from_xml", None)))
         parameters["forbidden_regions"].sort()

@@ -1,8 +1,9 @@
 import snapgene_reader as sgreader
+from Bio import SeqIO
 from typing import List, Callable
 from tqdm import tqdm
 import time
-from .segmentron_multiprocessing_v2 import multiprocessed_dynamic_programming
+from .multiprocessed_dynamic_programming_v2 import multiprocessed_dynamic_programming
 
 class segmentron:
     #Define stored variable types
@@ -61,10 +62,25 @@ class segmentron:
         Since the given file may have multiple features, only features marked with the color red (#ff0000) will be counted as forbidden regions
         This function returns the optimal score and the corresponding optimal segmentation by calling a helper function
         This helper function will also store the sequence and forbidden regions that were read from the file"""
+        if(len(filepath.split('.')) < 2):
+            print("Missing file extension")
+            return None
+        extension = filepath.split('.')[-1]
         self.parameters["filepath"] = filepath
-        dictionary = sgreader.snapgene_file_to_dict(filepath)
-        sequence = dictionary["seq"]
-        self.parameters["sequence"] = sequence
+        #Read sequence from a dna file
+        if(extension == "dna"):
+            dictionary = sgreader.snapgene_file_to_dict(filepath)
+            sequence = dictionary["seq"]
+            self.parameters["sequence"] = sequence
+        #Read sequence from a txt file
+        elif(extension == "txt"):
+            with open(filepath, "r") as file:
+                self.parameters["sequence"] = file.read()
+        elif(extension == "fa" or extension == "fasta"):
+            self.parameters["sequence"] = SeqIO.read(filepath, "fasta").seq
+        else:
+           print("Unsupported file type")
+           return None
         #Preprocess the sequence and store relevant information
         self.preprocess()
         forbidden_regions = self.parameters["forbidden_regions"]
