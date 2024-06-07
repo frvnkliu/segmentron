@@ -2,12 +2,13 @@ LICENSE
 README.md
 pyproject.toml
 src/Segmentron/__init__.py
+src/Segmentron/file_scorer_v5.py
+src/Segmentron/multiprocessed_dynamic_programming_v2.py
 src/Segmentron/scoring_accumulator.py
 src/Segmentron/scoring_forbidden_regions.py
 src/Segmentron/scoring_length.py
 src/Segmentron/scoring_microhomologies.py
 src/Segmentron/scoring_overlap_composition.py
-src/Segmentron/segmentron_multiprocessing_v2.py
 src/Segmentron/segmentron_v13.py
 src/Segmentron.egg-info/PKG-INFO
 src/Segmentron.egg-info/SOURCES.txt

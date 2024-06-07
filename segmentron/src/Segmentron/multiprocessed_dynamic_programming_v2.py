@@ -24,7 +24,6 @@ class multiprocessed_dynamic_programming:
                 break  # Exit the loop if an error occurs
     
     def run_singleprocess_calculation(self, length, types, protection_length, task_object, task_name, verbose = None, coarseness = 1):
-        #results = [multiprocessing.Array(array_type, length) for array_type in types]
         results = [np.zeros(length, dtype = array_type) for array_type in types]
         for results_array in results:
             for i in range(len(results_array)):
@@ -69,8 +68,6 @@ class multiprocessed_dynamic_programming:
 
         min_unfinished_index = 0
         #Minimum index such that all indices less than min_unfinished_index are True
-
-        max_index = (length // coarseness) * coarseness
 
         while min_unfinished_index < length:
             # Collect New Finished Task

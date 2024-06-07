@@ -1,14 +1,9 @@
 import snapgene_reader as sgreader
+from Bio import SeqIO
 from typing import List, Callable
 from tqdm import tqdm
 import time
-import json
-from . import scoring_forbidden_regions
-from . import scoring_length
-from . import scoring_microhomologies
-from . import scoring_overlap_composition
-from . import scoring_accumulator
-from . import segmentron_multiprocessing_v2 as segmentron_multiprocessing
+from .multiprocessed_dynamic_programming_v2 import multiprocessed_dynamic_programming
 
 class segmentron:
     #Define stored variable types
@@ -27,23 +22,6 @@ class segmentron:
     #Stored arrays for usage in dynamic programming
     optimal_scores: List[float]
     optimal_cuts: List[int]
-
-    def encodeSegmentron(self, blockIndex):
-        #encodes the current segmentation
-        data = {
-            "parameters": self.parameters,
-            "segmentation": {
-                "segmentation": self.segmentation,
-                "optimal_scores": self.optimal_scores,
-                "optimal_cuts": self.optimal_cuts,
-                "blockIndex": blockIndex
-            }
-        }
-        file_path = "segmentron.json"
-
-        with open(file_path, 'w') as json_file:
-            json.dump(self.to_dict(), json_file)
-
 
     def __init__(self, preprocessing_functions, segment_scoring_functions, accumulating_function, parameters):
         """Initializes a segmentron class with a given list of scoring functions, a function to combine these scores, and a set of parameters
@@ -84,13 +62,26 @@ class segmentron:
         Since the given file may have multiple features, only features marked with the color red (#ff0000) will be counted as forbidden regions
         This function returns the optimal score and the corresponding optimal segmentation by calling a helper function
         This helper function will also store the sequence and forbidden regions that were read from the file"""
+        if(len(filepath.split('.')) < 2):
+            raise ValueError("Missing File Extension")
+        extension = filepath.split('.')[-1]
         self.parameters["filepath"] = filepath
-        dictionary = sgreader.snapgene_file_to_dict(filepath)
-        sequence = dictionary["seq"]
-        self.parameters["sequence"] = sequence
+        #Read sequence from a dna file
+        if(extension == "dna"):
+            dictionary = sgreader.snapgene_file_to_dict(filepath)
+            self.parameters["sequence"] = dictionary["seq"]
+        #Read sequence from a txt file
+        elif(extension == "txt"):
+            with open(filepath, "r") as file:
+                self.parameters["sequence"] = file.read()
+        elif(extension == "fa" or extension == "fasta"):
+            self.parameters["sequence"] = str(SeqIO.read(filepath, "fasta").seq)
+        else:
+           raise ValueError("Unsupported File Type")
         #Preprocess the sequence and store relevant information
         self.preprocess()
         forbidden_regions = self.parameters["forbidden_regions"]
+        sequence = self.parameters["sequence"]
         return self.segment(sequence.upper(), forbidden_regions, coarseness, multiprocessing_cores, False)
 
     #Segment a sequence after being given the sequence and a set of forbidden regions
@@ -157,7 +148,7 @@ class segmentron:
         sequence = self.parameters["sequence"]
         sequence_length = len(sequence)
         min_length = self.parameters["min_length"]
-        multiprocesser = segmentron_multiprocessing.multiprocessed_dynamic_programming
+        multiprocesser = multiprocessed_dynamic_programming
         return multiprocesser.run_multiprocess_calculation(multiprocesser, multiprocessing_cores, sequence_length + 1, ["i", "f"], min_length, self, "segment_subsequence", self.parameters.get("verbose", None), coarseness)
 
     #Checks previous entries in stored arrays to find an optimal segmentation for a subsequence from 0 to a given ending_index
@@ -321,37 +312,3 @@ class segmentron:
                 #Write forbidden regions to the bed file
                 f.write(f"0\t{forbidden_regions[i][0]}\t{forbidden_regions[i][1]}\tForbidden Region {i + 1}\t0\t.\t0\t0\t255,0,0\n")
         return filepath
-    
-#Test code
-if __name__ == "__main__":
-    segment_scoring_functions = [scoring_length.length_score, scoring_forbidden_regions.forbidden_region_score, scoring_overlap_composition.overlap_composition_score, scoring_forbidden_regions.forbidden_region_class_score, scoring_microhomologies.microhomology_score]
-    preprocessing_functions = [scoring_forbidden_regions.forbidden_regions, scoring_overlap_composition.GC_proportions, scoring_microhomologies.relevant_microhomologies]
-    parameters = {
-                    "max_length" : 3000,
-                    "min_length" : 1000,
-                    "overlap" : 100,
-                    "microhomology_distance" : 20,
-                    "min_microhomology_length" : 8,
-                    "max_microhomology_length" : 19,
-                    "forbidden_region_class_count" : 1,
-                    "forbidden_regions_from_input" : False,
-                    "forbidden_region_generation" : False,
-                    "color" : "#ff0000",
-                    "verbose" : None
-                }
-    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
-    filepath = "./Hba_Sergio_Test.dna" 
-    total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 1, coarseness = 1)
-    segmenter.print_results()
-    segmenter.write_subsequences_to_txt("segmentation_multiprocessed.txt")
-    segmenter.write_segments_to_bed("segmentation_multiprocessed.bed")
-    segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions_multiprocessed.bed")
-    parameters["forbidden_regions_from_input"] = True
-    parameters["forbidden_region_generation"] = True
-    segmenter = segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
-    filepath = "./Hba_Sergio_Test.dna" 
-    total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 4, coarseness = 1)
-    segmenter.print_results()
-    segmenter.write_subsequences_to_txt("segmentation.txt")
-    segmenter.write_segments_to_bed("segmentation.bed")
-    segmenter.write_segments_and_forbidden_regions_to_bed("segmentation_and_forbidden_regions.bed")
