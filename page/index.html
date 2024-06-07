@@ -17,31 +17,56 @@
         <div id = links>
             <a href="https://frvnkliu.github.io/segmentron/">Segmentron</a> <a href="help">Help</a> <a href="about">About</a>
         </div>
-        
         <div id = "sections">
             <div id = "importSection">
                 <h2>Step 1</h2>
-                <div class="file-container">
-                    <label for="upload">Upload file ⓘ</label> 
-                    <span class="tooltip">ⓘ Supported file types: .dna, .txt</span>
-                    <input type="file" id="upload" accept= ".dna, .fa, .fasta" title="Supported file types: .dna"> 
+                <div class =  "file-container">
+                    <label>Choose file ⓘ</label> 
+                    <span class="tooltip">ⓘ Supported file types: .dna, .txt, .fasta, .fa</span>
+                    <div>
+                        <input type="file" id="upload" accept= ".dna, .fa, .fasta, .txt" title="Supported file types: .dna"> 
+                    </div>
+                    <p>Example File: <a href="HLA2_Sergio_Test.dna">HLA2_Sergio_test.dna</a></p>
                 </div>
-                <p>Example File: <a href="HLA2_Sergio_Test.dna">HLA2_Sergio_test.dna</a></p>
-                <br>
                 <div id = "parameterSection">
-                    <label for="parameterSelectors">Parameters</label>
+                    <label for="parameterSelectors">Algorithm Parameters</label>
+                    <button id = "restoreParam">Restore Default Parameters</button>
+                    <b>General Parameters</b>
                     <div id="parameterSelectors">
-                        <!--div><label>BLAST</label><input type="checkbox" name= "blast" unchecked></div-->
-                        <div><label>Blast</label> <input type="checkbox" name = "blast" checked></div>
-                        <div><label>GC Count</label> <input type="checkbox" name = "GCCount" checked></div>
-                        <div><label>Max Length</label><input type="text" name="maxLen" value="3000"> </div>
-                        <div><label>Min Length</label><input type="text" name="minLen" value= "1000"> </div>
+                        <div class="parameter">
+                            <label>BLAST</label>
+                            <div><input type="checkbox" name="blast" checked>Run NiH BLAST to find and consider similar regions</div>
+                        </div>
+                        <div class="parameter">
+                            <label>GC count</label>
+                            <div><input type="checkbox" name="GCCount" checked>Incorporate 'GC' count into the </div>
+                        </div>
+                        <div class="parameter">
+                            <label>Segment Length</label>
+                            <div>
+                                <input type="number" name="minLen" value="1000"> Minimum (nt)
+                                <br>
+                                <input type="number" name="maxLen" value="3000"> Maximum (nt)
+                            </div> 
+                        </div>
+                        <div class="parameter">
+                            <label>Overlap</label>
+                            <div><input type="number" name="overlap" value="100"></div>
+                        </div>
+                    </div>
 
-                        <div><label>Overlap</label><input type="text" name="overlap" value= "100"> </div>
-                        <div><label>Microhomology Distance</label><input type="text" name="microDist" value="20"> </div>
-                        <div><label>Min Microhomology Length</label><input type="text" name="minMicroLen" value="8"> </div>
-                        <div><label>Max Microhomology Length</label><input type="text" name="maxMicroLen" value="19"> </div>
-
+                    <b>Microhomologies</b>
+                    <div id="parameterSelectors">
+                        <div class="parameter">
+                            <label>Microhomology</label>
+                            <div>
+                                <input type="number" name="microDist" value="20"> Distance (nt)
+                                <br>
+                                <input type="number" name="minMicroLen" value="8"> Minimum Length (nt)
+                                <br>
+                                <input type="number" name="maxMicroLen" value="19"> Maximum Length (nt)
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!--<div id="loading-bar">
@@ -63,7 +88,7 @@
                     <div id='progressText'></div>
                 </div>
 
-                <img src="loadingCat.gif" alt="Loading Cat">
+                <!--<img src="loadingCat.gif" alt="Loading Cat">-->
                 <div id = "progContainer">
                     <textarea id="progressMsg" rows="10" readonly>Progress:</textarea>
                 </div>
@@ -83,12 +108,6 @@
                 <button type="button" id="restartButton">Start Again</button>
             </div>
         </div>
-        <div id = "scrollBtns">
-            <button id="scrollLeftBtn">&lt;</button>
-            <button id="scrollRightBtn">&gt;</button>
-        </div>
-        <p id = "status">Importing Python Libraries...</p>
-
     </div>
 </body>
 </html>

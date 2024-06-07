@@ -29,9 +29,6 @@ body {
     height: 80%;
 }
 
-#links {
-    margin-bottom: 20px;
-}
 
 a {
     margin-right: 20px;
@@ -75,12 +72,13 @@ h2{
     opacity: 0.7; /* Reduced opacity to visually indicate disabled state */
 }
 
-label, input, button, p {
+label, button, p {
     display: block;
     margin-bottom: 10px;
 }
 
-input, textarea, button {
+
+textarea, #upload {
     width: 60%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -88,14 +86,15 @@ input, textarea, button {
     font-size: 1em;
 }
 
-button {
+#importSection > button, #downloadSection > button {
     background-color: #007bff;
     color: #fff;
     cursor: pointer;
     font-size: 1.2em;
     border: none;
     border-radius: 5px;
-    width: 15%
+    width: 15%;
+    padding: 10px;
 }
 
 button:hover {
@@ -118,6 +117,14 @@ img {
     font-weight: bold;
 }
 
+.file-container {
+    position: relative;
+}
+
+.file-container label:hover + .tooltip {
+    display: block;
+}
+
 input[type="file"] + label {
     cursor: pointer;
     background-color: #007bff;
@@ -125,7 +132,8 @@ input[type="file"] + label {
     padding: 10px 20px;
     border-radius: 5px;
     display: inline-block;
-    margin-bottom: 0;
+    margin-bottom: 10px;
+    white-space: nowrap; /* Ensure the text does not wrap */
 }
 
 input[type="file"] + label:hover {
@@ -178,11 +186,6 @@ label {
     color:#007bff;
 }
 
-
-.file-container {
-    position: relative;
-}
-
 .tooltip {
     position: absolute;
     display: none;
@@ -192,9 +195,6 @@ label {
     border-radius: 0.25em;
   }
 
-.file-container label:hover + .tooltip {
-    display: block;
-}
 
 #downloadSection select {
     padding: 5px;
@@ -203,34 +203,51 @@ label {
     font-size: 1em;
 }
 
-#downloadSection button{
-    margin-top: 10px;
-}
-
 #parameterSelectors {
     text-align: left; /* Reset text alignment */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-#parameterSelectors div {
-    vertical-align: top; /* Align the divs to the top */
-    display: inline-block;
+.parameter {
+    display: flex;
     margin-right: 10px; /* Optional: Add some spacing between the divs */
-    text-align: center;
+    align-items: left;
+    margin-bottom: 10px;
 }
 
-#parameterSelectors input{
-    display: block; /* Center the input elements within the div */
-    margin: 0 auto; /* Center the input elements horizontally */
+.parameter > div{
+    padding-left: 5px;
+    border-left: solid #7f8c8d;
+}
+
+.parameter > *{
+    display: inline-block;
+}
+
+.parameter input{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.parameter input[type = "number"]{
+    width: 60px;
 }
 
 #parameterSelectors label {
     font-weight: bold;
     font-size: 0.8em;
     margin-right: 5px;
+    width: 100px; /* Limit the width to 20% */ /* Ensure text wraps within the max width */
+    display: inline-block; /* Make sure the element respects the width constraints */
+    text-wrap: pretty;
 }
 
 #parameterSection {
-    margin-bottom: 20px; /* Add some bottom margin to create space below the parameterSection */
+    margin-bottom: 15px; /* Add some bottom margin to create space below the parameterSection */
 }
 
 #restartButton{

@@ -36,7 +36,7 @@ async function loadPyodideAndPackages() {
   await micropip.install("snapgene_reader");
   await micropip.install("typing");
   await micropip.install("Bio");
-  await micropip.install("https://test-files.pythonhosted.org/packages/a2/25/7bced911cc62c5eb8bd96d299b7343e0adb3c8147ef5ec1ca608c2f18156/Segmentron-13.1.1-py3-none-any.whl");
+  await micropip.install("https://test-files.pythonhosted.org/packages/49/58/22e1594692e4824c80a70a763a3fc0b03ce9f784a0221e364e0491809adb/Segmentron-13.4.2-py3-none-any.whl");
   await self.pyodide.loadPackage(["numpy", "pytz"]);
 }
 let pyodideReadyPromise = loadPyodideAndPackages();
@@ -83,18 +83,41 @@ self.onmessage = async (event) => {
     const {python, file, blast} = event.data;
     // The worker copies the context in its own "memory" (an object mapping name to values)
     const content = await readFileAsync(file);
+    const parts = file.name.split('.');
+    if (parts.length === 1 || (parts[0] === "" && parts.length === 2)) {
+      throw new Error("Missing File Extension");
+    }
+
+    const extension = parts[1];
     const uint8ArrayContent = new Uint8Array(content);
-    pyodide.FS.writeFile("/sequence.dna", uint8ArrayContent);
+    pyodide.FS.writeFile(`/sequence.${extension}`, uint8ArrayContent);
     // Now is the easy part, the one that is similar to working in the main thread:
     if(blast){
       let blastStartTime = Date.now(); // Get the current time in milliseconds
       //.dna to .fa
       await pyodide.runPythonAsync(
-`import snapgene_reader as sgreader
-sequence = sgreader.snapgene_file_to_dict("/sequence.dna")["seq"]
+`
+from Bio import SeqIO
+import snapgene_reader as sgreader
+
+filepath = "/sequence.${extension}"
+extension = "${extension}"
+
+sequence = ""
+if(extension == "dna"):
+  dictionary = sgreader.snapgene_file_to_dict(filepath)
+  sequence = dictionary["seq"]
+elif(extension == "txt"):
+  with open(filepath, "r") as file:
+    sequence = file.read()
+elif(extension == "fa" or extension == "fasta"):
+  sequence = str(SeqIO.read(filepath, "fasta").seq)
+else:
+  raise ValueError("Unsupported File Type")
+
 with open("/temp.fa", "w") as f:
   f.write(">seq\\n" + sequence)`
-      );
+);
       self.postMessage({
         "type" : "output",
         "msg": "Starting Blast Query\n"

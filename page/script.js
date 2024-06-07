@@ -5,6 +5,8 @@ var file;
 var startTime;
 var timerInterval;
 
+const resultsFiles = {};
+
 async function loadPackages() {
     pyodide = await loadPyodide();
     console.log("Packages Loaded");
@@ -32,7 +34,6 @@ worker.onmessage = function(event){
         segmented = true;
         document.getElementById("downloadSection").classList.remove("hidden");
         document.getElementById("downloadSection").scrollIntoView({ behavior: 'smooth' });
-        document.getElementById("status").innerHTML = "Segmentation Finished!";
         document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
         alert("Segments are ready!");
     }else if(results["type"] == "output"){
@@ -75,10 +76,9 @@ function readFileAsync(file) {
 */
 function getParameters() {
     // Get the values from the input elements within the parameter section
-    const parameterSelectors = Array.from(document.getElementById("parameterSelectors").children);
+    const parameterInputs = document.querySelectorAll("#parameterSection input");
     const parameterValues = {};
-    parameterSelectors.forEach(parameterDiv => {
-        const parameterInput = parameterDiv.querySelector("input");
+    parameterInputs.forEach(parameterInput => {
         parameterValues[parameterInput["name"]] = parameterInput.type === "checkbox" ? parameterInput.checked : parameterInput.value;
     });
     // Return the map
@@ -133,15 +133,16 @@ parameters = {
                 "microhomology_distance" : ${param["microDist"]},
                 "min_microhomology_length" : ${param["minMicroLen"]},
                 "max_microhomology_length" : ${param["maxMicroLen"]},
-                "forbidden_regions_from_xml": ${param["blast"]?"\"blast_results\"":"None"},
+                "forbidden_regions_from_xml": ${param["blast"]?"\"blast_results.xml\"":"None"},
                 "forbidden_regions_from_file": True, 
                 "forbidden_region_class_count" : 1,
                 "forbidden_region_generation" : ${param["blast"]?"True":"False"},
                 "color" : "#ff0000",
                 "verbose" : verbose
             }
+
 segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
-filepath = "/sequence.dna"
+filepath = "/sequence.${file.name.split('.')[1]}"
 print("Start Scoring")
 total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 0, coarseness = 1)
 segmenter.print_results()
@@ -278,7 +279,6 @@ function segment(){
         // File is selected, you can perform further actions
         console.log("Selected file:", file);
         //document.getElementById("importSection").classList.add("hidden");
-        document.getElementById("status").innerHTML = "Calculating Optimal Segmentation... (Please Wait, May Take a While)";
         document.getElementById("segmentSection").classList.remove("hidden");
         document.getElementById("segmentSection").scrollIntoView({ behavior: 'smooth' });
         segmentFile();
@@ -293,6 +293,24 @@ function segment(){
 
     }
 }
+
+const defaultParams = {
+    blast: true,
+    GCCount: true,
+    minLen: 1000,
+    maxLen: 3000,
+    overlap: 100,
+    microDist: 20,
+    minMicroLen: 8,
+    maxMicroLen: 19
+};
+
+document.getElementById("restoreParam").addEventListener("click", ()=>{
+    const parameterInputs = document.querySelectorAll("#parameterSection input");
+    parameterInputs.forEach(parameterInput => {
+        parameterInput[parameterInput.type === "checkbox"?"checked":"value"] = defaultParams[parameterInput["name"]];
+    });
+});
 
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -310,11 +328,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     // Get references to the scroll buttons and the sections container
-    const scrollLeftBtn = document.getElementById('scrollLeftBtn');
-    const scrollRightBtn = document.getElementById('scrollRightBtn');
     const sectionsContainer = document.getElementById('sections');
 
     // Add event listeners to scroll buttons
+    /*
     scrollLeftBtn.addEventListener('click', () => {
         const scrollAmount = sectionsContainer.offsetWidth * 0.6; // Scroll by 60% of the section width
         sectionsContainer.scrollBy({
@@ -330,11 +347,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             behavior: 'smooth'
         });
     });
-
+    */
 
     await loadPackages();
     pyodideLoaded = true;
     var fileInput = document.getElementById("upload");
-    document.getElementById("status").innerHTML = "Ready!";
     segmentButton.classList.remove("disabledButton");
 });
