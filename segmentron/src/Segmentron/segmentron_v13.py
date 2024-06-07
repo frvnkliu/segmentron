@@ -63,27 +63,25 @@ class segmentron:
         This function returns the optimal score and the corresponding optimal segmentation by calling a helper function
         This helper function will also store the sequence and forbidden regions that were read from the file"""
         if(len(filepath.split('.')) < 2):
-            print("Missing file extension")
-            return None
+            raise ValueError("Missing File Extension")
         extension = filepath.split('.')[-1]
         self.parameters["filepath"] = filepath
         #Read sequence from a dna file
         if(extension == "dna"):
             dictionary = sgreader.snapgene_file_to_dict(filepath)
-            sequence = dictionary["seq"]
-            self.parameters["sequence"] = sequence
+            self.parameters["sequence"] = dictionary["seq"]
         #Read sequence from a txt file
         elif(extension == "txt"):
             with open(filepath, "r") as file:
                 self.parameters["sequence"] = file.read()
         elif(extension == "fa" or extension == "fasta"):
-            self.parameters["sequence"] = SeqIO.read(filepath, "fasta").seq
+            self.parameters["sequence"] = str(SeqIO.read(filepath, "fasta").seq)
         else:
-           print("Unsupported file type")
-           return None
+           raise ValueError("Unsupported File Type")
         #Preprocess the sequence and store relevant information
         self.preprocess()
         forbidden_regions = self.parameters["forbidden_regions"]
+        sequence = self.parameters["sequence"]
         return self.segment(sequence.upper(), forbidden_regions, coarseness, multiprocessing_cores, False)
 
     #Segment a sequence after being given the sequence and a set of forbidden regions
