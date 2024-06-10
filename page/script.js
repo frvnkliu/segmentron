@@ -79,7 +79,7 @@ function getParameters() {
     const parameterInputs = document.querySelectorAll("#parameterSection input");
     const parameterValues = {};
     parameterInputs.forEach(parameterInput => {
-        parameterValues[parameterInput["name"]] = parameterInput.type === "checkbox" ? parameterInput.checked : parameterInput.value;
+        parameterValues[parameterInput["name"]] = parameterInput.type === "checkbox" ? parameterInput.checked : Math.ceil(parameterInput.value);
     });
     // Return the map
     return parameterValues;

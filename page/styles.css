@@ -29,9 +29,10 @@ body {
     height: 80%;
 }
 
-
-a {
+#links > a {
     margin-right: 20px;
+}
+a {
     text-decoration: none;
     color: #007bff;
     font-weight: bold;
@@ -55,9 +56,20 @@ a:hover {
     color: #0056b3;
 }
 
-h1 {
+
+#headerContainer {
+    display: flex;
+    align-items: bottom;
+}
+
+#headerContainer h1{
     font-size: 2em;
     margin-bottom: 5px;
+}
+
+#headerContainer img {
+    height: 2em;
+    width: auto;
 }
 
 h2{
@@ -99,14 +111,6 @@ textarea, #upload {
 
 button:hover {
     background-color: #0056b3;
-}
-
-img {
-    width: 40%; /* Set the width of the image to 60% */
-    height: auto; /* Maintain the aspect ratio */
-    display: inline-block; /* Make it a block-level element to control margins */
-    margin: 0 auto; /* Center the image horizontally */
-    margin-top: 20px; /* Add some top margin */
 }
 
 .file-container {

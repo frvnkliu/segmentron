@@ -13,9 +13,12 @@
 
 <body>
     <div class="container">
-        <h1>Segmentron</h1>
+        <div id="headerContainer">
+            <h1>Segmentron</h1>
+            <img src="result.png" alt="Result">
+        </div>
         <div id = links>
-            <a href="https://frvnkliu.github.io/segmentron/">Main</a> <a href="help">Help</a><a href="https://github.com/frvnkliu/segmentron">Documentation</a>
+            <a href="https://frvnkliu.github.io/segmentron/">Main</a><a href="help">Help</a><a href="https://github.com/frvnkliu/segmentron">Documentation</a>
         </div>
         <div id = "sections">
             <div id = "importSection">
@@ -35,23 +38,23 @@
                     <div id="parameterSelectors">
                         <div class="parameter">
                             <label>BLAST</label>
-                            <div><input type="checkbox" name="blast" checked>Run NiH BLAST to find and consider similar regions</div>
+                            <div><input type="checkbox" name="blast" checked>Run <a href= "https://blast.ncbi.nlm.nih.gov/Blast.cgi" target = "_blank">NIH BLAST</a> to find and consider similar regions</div>
                         </div>
                         <div class="parameter">
                             <label>GC count</label>
-                            <div><input type="checkbox" name="GCCount" checked>Incorporate 'GC' count into the </div>
+                            <div><input type="checkbox" name="GCCount" checked>Incorporate 'GC' count into the segmentation </div>
                         </div>
                         <div class="parameter">
                             <label>Segment Length</label>
                             <div>
-                                <input type="number" name="minLen" value="1000"> Minimum (nt)
+                                <input type="number" name="minLen" value="1000" step = "100"> Minimum (nt)
                                 <br>
-                                <input type="number" name="maxLen" value="3000"> Maximum (nt)
+                                <input type="number" name="maxLen" value="3000" step = "100"> Maximum (nt)
                             </div> 
                         </div>
                         <div class="parameter">
                             <label>Overlap</label>
-                            <div><input type="number" name="overlap" value="100"></div>
+                            <div><input type="number" name="overlap" value="100" step = "10"> (nt)</div>
                         </div>
                     </div>
 
@@ -62,9 +65,9 @@
                             <div>
                                 <input type="number" name="microDist" value="20"> Distance (nt)
                                 <br>
-                                <input type="number" name="minMicroLen" value="8"> Minimum Length (nt)
+                                <input type="number" name="minMicroLen" value="8"> Minimum length (nt)
                                 <br>
-                                <input type="number" name="maxMicroLen" value="19"> Maximum Length (nt)
+                                <input type="number" name="maxMicroLen" value="19"> Maximum length (nt)
                             </div>
                         </div>
                     </div>
