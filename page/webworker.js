@@ -27,7 +27,7 @@ let v86ReadyPromise = startV86();
 //pyodide
 
 async function loadPyodideAndPackages() {
-  await import("https://cdn.jsdelivr.net/pyodide/v0.21.0/full/");
+  //await import("https://cdn.jsdelivr.net/pyodide/v0.21.0/full/");
   self.pyodide = await loadPyodide();
   //Imports with Micropip
   await pyodide.loadPackage("micropip");
