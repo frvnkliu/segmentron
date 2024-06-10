@@ -32,6 +32,7 @@ worker.onmessage = function(event){
         pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
         pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);        
         segmented = true;
+        document.getElementById("findSegments").disabled = false;
         document.getElementById("downloadSection").classList.remove("hidden");
         document.getElementById("downloadSection").scrollIntoView({ behavior: 'smooth' });
         document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
@@ -134,7 +135,7 @@ parameters = {
                 "min_microhomology_length" : ${param["minMicroLen"]},
                 "max_microhomology_length" : ${param["maxMicroLen"]},
                 "forbidden_regions_from_xml": ${param["blast"]?"\"blast_results.xml\"":"None"},
-                "forbidden_regions_from_file": True, 
+                "forbidden_regions_from_input": True, 
                 "forbidden_region_class_count" : 1,
                 "forbidden_region_generation" : ${param["blast"]?"True":"False"},
                 "color" : "#ff0000",
@@ -261,12 +262,14 @@ function downloadSegments(){
 /*
     Starts segmentation
 */
-function segment(){
+function segment(event){
+
     if (!pyodideLoaded) {
         // Pyodide is not yet loaded, display a message or handle it appropriately
         alert("Please wait for Pyodide and packages to be loaded.");
         return;
     }
+    event.target.disabled  = true;
     // Retrieve the file input element
     var fileInput = document.getElementById("upload");
 
@@ -289,6 +292,7 @@ function segment(){
             alert("Please enter a FASTA segment.");
             return; // Stop further execution
         }*/
+        event.target.disabled  = false;
         alert("Please upload a file");
 
     }

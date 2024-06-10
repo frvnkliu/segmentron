@@ -37,7 +37,7 @@ async function loadPyodideAndPackages() {
   await micropip.install("snapgene_reader");
   await micropip.install("typing");
   await micropip.install("Bio");
-  await micropip.install("https://test-files.pythonhosted.org/packages/49/58/22e1594692e4824c80a70a763a3fc0b03ce9f784a0221e364e0491809adb/Segmentron-13.4.2-py3-none-any.whl");
+  await micropip.install("https://test-files.pythonhosted.org/packages/aa/8c/91fdb5b279f70588a78de7bbc284d1535f41bb069055d1c3e699cf2109b9/Segmentron-13.5.0-py3-none-any.whl");
   await self.pyodide.loadPackage(["numpy", "pytz"]);
 }
 let pyodideReadyPromise = loadPyodideAndPackages();
