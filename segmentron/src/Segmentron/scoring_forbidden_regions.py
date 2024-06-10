@@ -145,6 +145,7 @@ def forbidden_region_read(parameters):
             forbidden_regions.append((feature["start"], feature["end"]))
     #Sort the forbidden_regions by starting index
     forbidden_regions.sort()
+    parameters["specified_forbidden_regions"] = forbidden_regions.copy()
     parameters["forbidden_regions"] = forbidden_regions
     parameters["forbidden_region_classes"] = [forbidden_regions]
     return None
@@ -154,6 +155,7 @@ def forbidden_region_classes_read(parameters):
     filepath = parameters["filepath"]
     #Default value for forbidden_region_class_count is 1
     forbidden_region_class_count = parameters.get("forbidden_region_class_count", 1)
+    forbidden_regions = []
     dictionary = sgreader.snapgene_file_to_dict(filepath)
     features = dictionary["features"]
     forbidden_region_color = parameters["color"]
@@ -177,6 +179,7 @@ def forbidden_region_classes_read(parameters):
     #Sort the forbidden_regions by starting index
     forbidden_regions.sort()
     parameters["forbidden_regions"] = forbidden_regions
+    parameters["specified_forbidden_regions"] = forbidden_regions.copy()
     for forbidden_region_class in forbidden_region_classes_list:
         forbidden_region_class.sort()
     parameters["forbidden_region_classes"] = forbidden_region_classes_list
@@ -192,6 +195,7 @@ def forbidden_regions(parameters):
     #Default value for forbidden_regions_from_input is False
     forbidden_regions_from_input = parameters.get("forbidden_regions_from_input", False)
     if not (forbidden_region_generation or forbidden_regions_from_input):
+        parameters["specified_forbidden_regions"] = forbidden_regions.copy()
         parameters["forbidden_regions"] = forbidden_regions
         parameters["forbidden_region_classes"] = [forbidden_regions]
         return 0

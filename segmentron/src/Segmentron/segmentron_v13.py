@@ -296,7 +296,7 @@ class segmentron:
         return filepath
     
     #Writes the segmentation and forbidden regions to a bed file that can be imported into SnapGene
-    def write_segments_and_forbidden_regions_to_bed(self, filepath):
+    def write_segments_and_forbidden_regions_to_bed(self, filepath, forbidden_region_details = True):
         """Writes the segment label, starting index, and ending index to a given bed file
         Every segment excluding the overlap corresponding to the stored segmentation is included in this bed file
         This function uses the stored segmentation when writing to the bed file"""
@@ -308,7 +308,24 @@ class segmentron:
                     #Write segments to the bed file
                     f.write(f"0\t{self.segmentation[i]}\t{self.segmentation[i + 1]}\tSegment {i + 1}\t0\t.\t0\t0\t166,172,179\n")
             forbidden_regions = self.parameters["forbidden_regions"]
+            region_type = ""
             for i in range(0, len(forbidden_regions) - 1):
                 #Write forbidden regions to the bed file
-                f.write(f"0\t{forbidden_regions[i][0]}\t{forbidden_regions[i][1]}\tForbidden Region {i + 1}\t0\t.\t0\t0\t255,0,0\n")
+                #Add information about forbidden region type if necessary
+                if (forbidden_region_details):
+                    forbidden_region = (0, 0)
+                    #Go through each forbidden region and compare to the specified forbidden regions read from the file
+                    region_type = "Generated"
+                    forbidden_region = forbidden_regions[i]
+                    for specified_forbidden_region in self.parameters.get("specified_forbidden_regions", []):
+                        #If a specified forbidden region is included, check if they are identical or it is a subregion
+                        if (specified_forbidden_region[0] >= forbidden_region[0]):
+                            if (specified_forbidden_region[0] == forbidden_region[0]) and (specified_forbidden_region[1] == forbidden_region[1]):
+                                #If the regions are identical, the region was specified
+                                region_type = "Specified"
+                                break
+                    #Write segments to the bed file
+                    f.write(f"0\t{forbidden_regions[i][0]}\t{forbidden_regions[i][1]}\t{region_type} Forbidden Region {i + 1}\t0\t.\t0\t0\t255,0,0\n")
+                else:
+                    f.write(f"0\t{forbidden_regions[i][0]}\t{forbidden_regions[i][1]}\tForbidden Region {i + 1}\t0\t.\t0\t0\t255,0,0\n")
         return filepath
