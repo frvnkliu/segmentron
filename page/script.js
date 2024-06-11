@@ -1,24 +1,9 @@
-let pyodideLoaded = false;
-let pyodide;
 var segmented;
 var file;
 var startTime;
 var timerInterval;
 
-const resultsFiles = {};
-
-async function loadPackages() {
-    pyodide = await loadPyodide();
-    console.log("Packages Loaded");
-/*    pyodide.setStdout({batched: (str) => {
-        document.getElementById('findSegments').innerHTML = str;
-    }
-    });
-    const testCode = 
-`print("hello hello")
-`
-    await pyodide.runPythonAsync(testCode);*/
-};
+const resultFiles = {};
 
 const worker = new Worker('./webworker.js');
 var currCt, totalLen;
@@ -195,7 +180,7 @@ function downloadSegmentsTxt(){
         return;
     }
     const fileName = file ? file.name.split(".")[0]: "";
-    const content = pyodide.FS.readFile("/segmentation.txt");
+    const content = resultFiles["txt"];//pyodide.FS.readFile("/segmentation.txt");
     const blob = new Blob([content],  {type: "text/plain"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -215,7 +200,7 @@ function downloadSegmentsBed() {
     }
     // Split into multiple download buttons
     const fileName = file ? file.name.split(".")[0]: "";
-    const content = pyodide.FS.readFile("/segmentation.bed");
+    const content = resultFiles["bed"]; //pyodide.FS.readFile("/segmentation.bed");
     const blob = new Blob([content],  {type: "application/octet-stream"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -235,7 +220,7 @@ function downloadSegmentsBedFR() {
     }
     // Split into multiple download buttons
     const fileName = file ? file.name.split(".")[0]: "";
-    const content = pyodide.FS.readFile("/segmentation_and_forbidden_regions_multiprocessed.bed");
+    const content = resultFiles["bedFR"];//pyodide.FS.readFile("/segmentation_and_forbidden_regions_multiprocessed.bed");
     const blob = new Blob([content],  {type: "application/octet-stream"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -267,12 +252,6 @@ function downloadSegments(){
     Starts segmentation
 */
 function segment(event){
-
-    if (!pyodideLoaded) {
-        // Pyodide is not yet loaded, display a message or handle it appropriately
-        alert("Please wait for Pyodide and packages to be loaded.");
-        return;
-    }
     event.target.disabled  = true;
     // Retrieve the file input element
     var fileInput = document.getElementById("upload");
@@ -357,8 +336,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
     */
 
-    await loadPackages();
-    pyodideLoaded = true;
     var fileInput = document.getElementById("upload");
     segmentButton.classList.remove("disabledButton");
 });
