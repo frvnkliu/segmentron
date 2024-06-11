@@ -1,12 +1,12 @@
 #sections{
     display: grid;
     gap: var(--size-3);
-    grid-auto-flow: column;
+    /*grid-auto-flow: column;
     grid-auto-columns: 100%;
     overflow-x: scroll;
-    overscroll-behavior-inline: contain;
+    overscroll-behavior-inline: contain;*/
 
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: y mandatory;
 }
 
 #sections > div{
@@ -107,6 +107,10 @@ textarea, #upload {
     border-radius: 5px;
     width: 15%;
     padding: 10px;
+}
+
+#downloadButton{
+    margin-top: 10px;
 }
 
 button:hover {
@@ -315,4 +319,10 @@ textarea {
 #progressText{
     padding-top: 2px;
     padding-bottom: 2px;
+}
+
+footer{
+    padding: 10px;
+    text-align: center;
+    font-family: Helvetica;
 }

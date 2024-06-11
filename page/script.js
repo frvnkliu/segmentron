@@ -28,6 +28,10 @@ worker.onmessage = function(event){
     const results = event.data;
     if (results["type"] == "segmentation") {
         clearInterval(timerInterval);
+        resultFiles["txt"] = results["segmentation.txt"];
+        resultFiles["bed"] = results["segmentation.bed"];
+        resultFiles["bedFR"] = results["segmentation_and_forbidden_regions_multiprocessed.bed"];
+
         pyodide.FS.writeFile("/segmentation.txt", results["segmentation.txt"]);
         pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
         pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);        
