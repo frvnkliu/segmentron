@@ -34,7 +34,7 @@
                     <label for="parameterSelectors">Algorithm Parameters</label>
                     <button id = "restoreParam">Restore Default Parameters</button>
                     <b>General Parameters</b>
-                    <div id="parameterSelectors">
+                    <div class="parameterSelectors">
                         <div class="parameter">
                             <label>BLAST</label>
                             <div><input type="checkbox" name="blast" checked>Run NIH BLAST to find and consider similar regions</div>
@@ -58,7 +58,7 @@
                     </div>
 
                     <b>Microhomologies</b>
-                    <div id="parameterSelectors">
+                    <div class="parameterSelectors">
                         <div class="parameter">
                             <label>Microhomology</label>
                             <div>
@@ -71,10 +71,7 @@
                         </div>
                     </div>
                 </div>
-                <!--<div id="loading-bar">
-                    <div id="progress-bar"></div>
-                </div>-->
-                <button type="button" id="findSegments">Submit</button>
+                <button type="button" id="submitButton">Submit</button>
             </div>
     
     
@@ -91,7 +88,7 @@
 
                 <!--<img src="loadingCat.gif" alt="Loading Cat">-->
                 <div id = "progContainer">
-                    <textarea id="progressMsg" rows="10" readonly>Progress:</textarea>
+                    <textarea id="progressMsg" rows="10" readonly></textarea>
                 </div>
             </div>
             
@@ -105,7 +102,6 @@
                     <option value="txt">TXT Format (.txt)</option>
                 </select>
                 <button type="button" id="downloadButton">Download</button>
-                <button type="button" id="restartButton">Start Again</button>
             </div>
         </div>
     </div>

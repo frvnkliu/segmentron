@@ -121,7 +121,7 @@ with open("/temp.fa", "w") as f:
 );
       self.postMessage({
         "type" : "output",
-        "msg": "Starting Blast Query\n"
+        "msg": "Starting Blast Query"
       });
       //create blast_results.xml
       const fa_file =pyodide.FS.readFile("/temp.fa");
@@ -163,7 +163,7 @@ with open("/temp.fa", "w") as f:
               let blastEndTime = Date.now(); 
               self.postMessage({
                 "type" : "output",
-                "msg": `Finished Blast Query (${((blastEndTime-blastStartTime)/1000).toFixed(2)} seconds)\n`
+                "msg": `Finished Blast Query (${((blastEndTime-blastStartTime)/1000).toFixed(2)} seconds)`
               });
               //read file from v86
 

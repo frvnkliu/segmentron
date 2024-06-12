@@ -16,12 +16,9 @@ worker.onmessage = function(event){
         resultFiles["txt"] = results["segmentation.txt"];
         resultFiles["bed"] = results["segmentation.bed"];
         resultFiles["bedFR"] = results["segmentation_and_forbidden_regions_multiprocessed.bed"];
-
-        /*pyodide.FS.writeFile("/segmentation.txt", results["segmentation.txt"]);
-        pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
-        pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);  */     
+  
         segmented = true;
-        document.getElementById("findSegments").disabled = false;
+        document.getElementById("submitButton").disabled = false;
         document.getElementById("downloadSection").classList.remove("hidden");
         document.getElementById("downloadSection").scrollIntoView({ behavior: 'smooth' });
         document.getElementById("inputFileName").innerHTML = `Input File: ${file.name.split(".")[0]}`;
@@ -34,7 +31,7 @@ worker.onmessage = function(event){
         }else{
             console.log("Message From Worker: ", results["msg"]);
             const progressMsg = document.getElementById("progressMsg")
-            progressMsg.value += `\n${results["msg"]}`;
+            progressMsg.value += `\n${results["msg"]}\n`;
             if(results["msg"].indexOf("This function")==0){
                 setLoadingProgress(totalLen, totalLen);
                 document.getElementById('loadingBar').style.backgroundColor = '#007bff';
@@ -107,7 +104,7 @@ import Segmentron.scoring_accumulator as scoring_accumulator
 end_time = time.time()
 elapsed_time = end_time - start_time
 
-print(f"Finished import in {elapsed_time:.2f} seconds")
+print(f"Finished importing libraries in {elapsed_time:.2f} seconds")
 
 def verbose(i, total_length):
     if(i%1000==0):
@@ -133,7 +130,7 @@ parameters = {
 
 segmenter = Segmentron.segmentron(preprocessing_functions, segment_scoring_functions, scoring_accumulator.addition_function, parameters)
 filepath = "/sequence.${file.name.split('.')[1]}"
-print("Start Scoring")
+print("Starting Segmentation")
 total_score, segmentation = segmenter.segment_from_file(filepath, multiprocessing_cores = 0, coarseness = 1)
 segmenter.print_results()
 segmenter.write_subsequences_to_txt("/segmentation.txt")
@@ -164,7 +161,7 @@ async function startWebWorkerSegment() {
         });
     } catch (e) {
         console.log(
-        `Error in pyodideWorker at ${e.filename}, Line: ${e.lineno}, ${e.message}`,
+        `Error in Worker at ${e.filename}, Line: ${e.lineno}, ${e.message}`,
         );
     }
 }
@@ -172,80 +169,20 @@ startWebWorkerSegment();
 }
 
 /*
-    Downloads .txt output file of segmentation
-*/
-function downloadSegmentsTxt(){
-    if(!segmented){
-        alert("Please wait for segmentation to finish");
-        return;
-    }
-    const fileName = file ? file.name.split(".")[0]: "";
-    const content = resultFiles["txt"];//pyodide.FS.readFile("/segmentation.txt");
-    const blob = new Blob([content],  {type: "text/plain"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${fileName}_segmentation.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-/*
-    Downloads .bed output file of segmentation
-*/
-function downloadSegmentsBed() {
-    if(!segmented){
-        alert("Please wait for segmentation to finish");
-        return;
-    }
-    // Split into multiple download buttons
-    const fileName = file ? file.name.split(".")[0]: "";
-    const content = resultFiles["bed"]; //pyodide.FS.readFile("/segmentation.bed");
-    const blob = new Blob([content],  {type: "application/octet-stream"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${fileName}_segmentation.bed`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-/*
-    Downloads .bed output file of segmentation + forbidden regions
-*/
-function downloadSegmentsBedFR() {
-    if(!segmented){
-        alert("Please wait for segmentation to finish");
-        return;
-    }
-    // Split into multiple download buttons
-    const fileName = file ? file.name.split(".")[0]: "";
-    const content = resultFiles["bedFR"];//pyodide.FS.readFile("/segmentation_and_forbidden_regions_multiprocessed.bed");
-    const blob = new Blob([content],  {type: "application/octet-stream"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `${fileName}_segmentation_and_forbidden_regions_multiprocessed.bed`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-/*
     Downloads segments of code
 */
 function downloadSegments(){
     const exportType = document.getElementById('exportFormat').value;
-    switch(exportType){
-        case "bed":
-            downloadSegmentsBed();
-            break;
-        case "bedFR":
-            downloadSegmentsBedFR();
-            break;
-        case "txt":
-            downloadSegmentsTxt();
-            break;
-    }
+    // Split into multiple download buttons
+    const fileName = file ? file.name.split(".")[0]: "";
+    const content = resultFiles[exportType];
+    const blob = new Blob([content],  {type: "application/octet-stream"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${fileName}_segmentation_results_${exportType}.${exportType.substring(0,3)}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 /*
@@ -257,24 +194,21 @@ function segment(event){
     var fileInput = document.getElementById("upload");
 
     // Get the selected file
-    
-    //var fastaSegment = document.getElementById("segment").value;
-
     if (fileInput.files[0]) {
         file = fileInput.files[0];
         // File is selected, you can perform further actions
         console.log("Selected file:", file);
         //document.getElementById("importSection").classList.add("hidden");
         document.getElementById("segmentSection").classList.remove("hidden");
+        document.getElementById("downloadSection").classList.add("hidden");
         document.getElementById("segmentSection").scrollIntoView({ behavior: 'smooth' });
+        document.getElementById("progressMsg").value = "Progress:";
+        var loadingBar = document.getElementById('loadingBar');
+        loadingBar.style.width = '0%';
+        document.getElementById('percentText').innerHTML = `0%`;
+        document.getElementById('progressText').innerHTML = '';
         segmentFile();
     } else {
-        // No file is selected
-        /*if (!fastaSegment.trim()) {
-            // FASTA segment is empty, send an error message
-            alert("Please enter a FASTA segment.");
-            return; // Stop further execution
-        }*/
         event.target.disabled  = false;
         alert("Please upload a file");
 
@@ -303,38 +237,14 @@ document.getElementById("restoreParam").addEventListener("click", ()=>{
 document.addEventListener("DOMContentLoaded", async function () {
     // Wait for the DOM content to be fully loaded
     // Add an event listener to the "Find Segments" button
-    const segmentButton = document.getElementById("findSegments");
+    const segmentButton = document.getElementById("submitButton");
     segmentButton.addEventListener("click", segment);
 
     const downloadButton = document.getElementById("downloadButton");
     downloadButton.addEventListener("click", downloadSegments);
 
-    const restartButton = document.getElementById("restartButton");
-    restartButton.addEventListener("click", ()=>{
-        document.getElementById("importSection").scrollIntoView({ behavior: 'smooth' });
-    });
-
     // Get references to the scroll buttons and the sections container
     const sectionsContainer = document.getElementById('sections');
-
-    // Add event listeners to scroll buttons
-    /*
-    scrollLeftBtn.addEventListener('click', () => {
-        const scrollAmount = sectionsContainer.offsetWidth * 0.6; // Scroll by 60% of the section width
-        sectionsContainer.scrollBy({
-            left: -scrollAmount,
-            behavior: 'smooth'
-        });
-    });
-
-    scrollRightBtn.addEventListener('click', () => {
-        const scrollAmount = sectionsContainer.offsetWidth * 0.6; // Scroll by 60% of the section width
-        sectionsContainer.scrollBy({
-            left: scrollAmount,
-            behavior: 'smooth'
-        });
-    });
-    */
 
     var fileInput = document.getElementById("upload");
     segmentButton.classList.remove("disabledButton");

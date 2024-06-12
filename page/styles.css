@@ -42,21 +42,6 @@ a:hover {
     color: #0056b3;
 }
 
-.contentTable li {
-    margin-bottom: 10px; /* Add space between list items */
-}
-
-.contentTable a {
-    text-decoration: none;
-    color: #000000;
-    font-size: 1.2em; /* Increase font size */
-}
-
-.contentTable a:hover {
-    color: #0056b3;
-}
-
-
 #headerContainer {
     display: flex;
     align-items: bottom;
@@ -78,24 +63,21 @@ h2{
     color: #007bff;
 }
 
-#segment{
-    background-color: #bdc3c7; /* Light gray background color */
-    color: #7f8c8d; /* Darker text color for better contrast */
-    opacity: 0.7; /* Reduced opacity to visually indicate disabled state */
-}
-
 label, button, p {
     display: block;
     margin-bottom: 10px;
+    font-size: 1em;
 }
 
-
 textarea, #upload {
-    width: 60%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
+}
+
+#upload{
+    width: 40%;
 }
 
 #importSection > button, #downloadSection > button {
@@ -107,10 +89,16 @@ textarea, #upload {
     border-radius: 5px;
     width: 15%;
     padding: 10px;
+    margin-top: 10px;
 }
 
-#downloadButton{
-    margin-top: 10px;
+#submitButton:disabled{
+    background-color: rgb(91, 91, 91);
+    cursor: not-allowed; 
+}
+
+#submitButton:disabled:hover {
+    background-color: rgb(125, 125, 125);
 }
 
 button:hover {
@@ -182,14 +170,6 @@ label {
     /*background-color: rgb(125, 125, 125);*/
 }
 
-.disabledButton{
-    background-color: rgb(91, 91, 91);
-}
-
-.disabledButton:hover {
-    background-color: rgb(125, 125, 125);
-}
-
 #status{
     color:#007bff;
 }
@@ -211,13 +191,18 @@ label {
     font-size: 1em;
 }
 
-#parameterSelectors {
+#restoreParam{
+    font-size: 0.8em;
+}
+
+.parameterSelectors {
     text-align: left; /* Reset text alignment */
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
+    font-size: 0.8em;
 }
 
 .parameter {
@@ -245,9 +230,9 @@ label {
     width: 60px;
 }
 
-#parameterSelectors label {
+.parameterSelectors label {
+    font-size: 1em;
     font-weight: bold;
-    font-size: 0.8em;
     margin-right: 5px;
     width: 100px; /* Limit the width to 20% */ /* Ensure text wraps within the max width */
     display: inline-block; /* Make sure the element respects the width constraints */
@@ -258,31 +243,15 @@ label {
     margin-bottom: 15px; /* Add some bottom margin to create space below the parameterSection */
 }
 
-#restartButton{
-    background-color: #6a6a6a;
-}
-
-#scrollBtns button {
-    width: 50px; /* Adjust button width as needed */
-    height: 50px; /* Make buttons square */
-    margin: 0 5px; /* Adjust margin as needed */
-}
-
-#scrollBtns {
-    display: flex;
-    justify-content: center; /* Center the buttons horizontally */
-    align-items: center; /* Center the buttons vertically */
-    margin-top: 20px; /* Adjust margin as needed */
-}
-
 textarea {
     width: 100%;
     height: 200px; /* Adjust as needed */
     overflow-y: scroll;
+    max-width: 150%;
 }
 
 #progContainer{
-    width: 35%;
+    width: 70%;
     height: 40px;
     display: inline-block;
     margin-bottom: 20px;
