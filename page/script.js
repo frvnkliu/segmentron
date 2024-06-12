@@ -17,9 +17,9 @@ worker.onmessage = function(event){
         resultFiles["bed"] = results["segmentation.bed"];
         resultFiles["bedFR"] = results["segmentation_and_forbidden_regions_multiprocessed.bed"];
 
-        pyodide.FS.writeFile("/segmentation.txt", results["segmentation.txt"]);
+        /*pyodide.FS.writeFile("/segmentation.txt", results["segmentation.txt"]);
         pyodide.FS.writeFile("/segmentation.bed", results["segmentation.bed"]);
-        pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);        
+        pyodide.FS.writeFile("/segmentation_and_forbidden_regions_multiprocessed.bed", results["segmentation_and_forbidden_regions_multiprocessed.bed"]);  */     
         segmented = true;
         document.getElementById("findSegments").disabled = false;
         document.getElementById("downloadSection").classList.remove("hidden");
