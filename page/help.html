@@ -44,6 +44,7 @@ Users are able to adjust what parameters are considered in the segmentation proc
     </div>
     <div id = "output">
         <h2>Segmentation Output</h2>
+        <p>There are currently three different output options/formats.</p>
         <h3>Text Output (.txt)</h2>
         <p>The text output conists of the range of indicies [start, end] from the original sequence that each segment contains as well as the nucleotides themselves. These segments have the overlap included and can be used to produce the segments directly.</p>
         <p>Example Text Output: <a href="examples/output/HLA2_Sergio_Test_segmentation_results_txt.txt" download>HLA2_Sergio_Test_segmentation_results_txt.txt</a> 
@@ -55,7 +56,6 @@ Users are able to adjust what parameters are considered in the segmentation proc
         <p>The .bed output including forbidden regions consists of the indices of each segment as well as the indices of all the forbidden regions that were incorporated into the calculation. When opened in snapgene alongisde the original DNA sequence one can observe the segmentation as well as user-specified and generated forbidden regions</p>
 
         <p>Example Bed + Forbidden Regions Output: <a href="examples/output/HLA2_Sergio_Test_segmentation_results_bedFR.bed" download>HLA2_Sergio_Test_segmentation_results_bedFR.bed</a> 
-        <p>There are three different outputs</p>
     </div>
     <div id = "runtime">
         <h2>Segmentation Calculation</h2>
