@@ -48,6 +48,7 @@ a:hover {
 }
 
 #headerContainer h1{
+    margin-top: 0px;
     font-size: 2em;
     margin-bottom: 5px;
 }
@@ -274,6 +275,10 @@ textarea {
     align-items: center; /* Vertically center the text */
     justify-content: flex-end; /* Right-align the text */
     color: white; /* Set the text color for better visibility */
+}
+
+#loadingBar.finished{
+    background-color: #007bff;
 }
 
 #percentText{

@@ -88,7 +88,6 @@ self.onmessage = async (event) => {
     if (parts.length === 1 || (parts[0] === "" && parts.length === 2)) {
       throw new Error("Missing File Extension");
     }
-
     const extension = parts[1];
     const uint8ArrayContent = new Uint8Array(content);
     pyodide.FS.writeFile(`/sequence.${extension}`, uint8ArrayContent);
@@ -121,8 +120,9 @@ with open("/temp.fa", "w") as f:
 );
       self.postMessage({
         "type" : "output",
-        "msg": "Starting Blast Query"
+        "msg": "Starting BLAST query"
       });
+      data = "";
       //create blast_results.xml
       const fa_file =pyodide.FS.readFile("/temp.fa");
       const fa_blob = new Blob([fa_file],  {type: "application/octet-stream"});
@@ -163,7 +163,7 @@ with open("/temp.fa", "w") as f:
               let blastEndTime = Date.now(); 
               self.postMessage({
                 "type" : "output",
-                "msg": `Finished Blast Query (${((blastEndTime-blastStartTime)/1000).toFixed(2)} seconds)`
+                "msg": `Finished BLAST query (${((blastEndTime-blastStartTime)/1000).toFixed(2)} seconds)`
               });
               //read file from v86
 

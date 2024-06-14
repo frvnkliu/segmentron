@@ -1,0 +1,29 @@
+#Chromosome Number	Start	End	Label	Score	Strand	Thick Start	Thick End	RGB
+0	0	1063	Segment 1	0	.	0	0	166,172,179
+0	1063	2762	Segment 2	0	.	0	0	166,172,179
+0	2762	5017	Segment 3	0	.	0	0	166,172,179
+0	5017	8017	Segment 4	0	.	0	0	166,172,179
+0	8017	10931	Segment 5	0	.	0	0	166,172,179
+0	10931	13035	Segment 6	0	.	0	0	166,172,179
+0	13035	15654	Segment 7	0	.	0	0	166,172,179
+0	15654	17525	Segment 8	0	.	0	0	166,172,179
+0	17525	20525	Segment 9	0	.	0	0	166,172,179
+0	20525	23172	Segment 10	0	.	0	0	166,172,179
+0	2164	2395	Generated Forbidden Region 1	0	.	0	0	255,0,0
+0	3348	4454	Specified Forbidden Region 2	0	.	0	0	255,0,0
+0	3348	4454	Specified Forbidden Region 3	0	.	0	0	255,0,0
+0	4546	4655	Generated Forbidden Region 4	0	.	0	0	255,0,0
+0	5268	5348	Generated Forbidden Region 5	0	.	0	0	255,0,0
+0	5430	6564	Generated Forbidden Region 6	0	.	0	0	255,0,0
+0	5442	5553	Specified Forbidden Region 7	0	.	0	0	255,0,0
+0	5573	6540	Specified Forbidden Region 8	0	.	0	0	255,0,0
+0	7225	7317	Specified Forbidden Region 9	0	.	0	0	255,0,0
+0	7225	7658	Generated Forbidden Region 10	0	.	0	0	255,0,0
+0	9571	10668	Specified Forbidden Region 11	0	.	0	0	255,0,0
+0	9571	10668	Specified Forbidden Region 12	0	.	0	0	255,0,0
+0	14265	15390	Generated Forbidden Region 13	0	.	0	0	255,0,0
+0	14272	14383	Specified Forbidden Region 14	0	.	0	0	255,0,0
+0	14400	15367	Specified Forbidden Region 15	0	.	0	0	255,0,0
+0	16014	16106	Specified Forbidden Region 16	0	.	0	0	255,0,0
+0	16014	16437	Generated Forbidden Region 17	0	.	0	0	255,0,0
+0	18066	18145	Generated Forbidden Region 18	0	.	0	0	255,0,0

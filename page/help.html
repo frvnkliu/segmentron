@@ -11,48 +11,73 @@
 <div class = "container">
     <div id="headerContainer">
         <h1>Segmentron</h1>
-        <img src="result.png" alt="Result">
     </div>
     <div id = links>
-        <a href="#importSection">Main</a><a href="help">Help</a><a href="https://github.com/frvnkliu/segmentron">Documentation</a>
+        <a href="/">Main</a><a href="#table-of-contents">Help</a><a href="https://github.com/frvnkliu/segmentron">Documentation</a>
     </div>
-    <p>Welcome to the help page of Segmentron! (!!!THIS PAGE IS STILL IN DEVELOPMENT!!!)
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ornare nulla rutrum, semper mi quis, euismod purus. Suspendisse vel ipsum a purus accumsan interdum sed eu mauris. 
-        Sed dapibus nisi commodo nisi euismod vehicula. Aenean sed quam justo. Fusce non ullamcorper erat, non tristique massa.
-         Quisque mollis tellus ac dui iaculis, nec euismod sapien interdum. Sed dapibus in massa non cursus. 
-         Quisque interdum lorem quis erat pellentesque fermentum. Nunc pharetra lacinia erat eu laoreet. Cras ac auctor ligula. 
-         Quisque sollicitudin facilisis ultrices. Vestibulum pharetra, est at auctor vestibulum, nibh neque egestas ex, eu condimentum erat nisl vel sem. 
-         Nunc at enim finibus, venenatis neque ut, luctus magna. Mauris vitae orci ultricies, tempor risus non, pellentesque dui. 
-         Morbi ultrices tristique dolor, a vehicula metus commodo eu.
+    <p>
+Welcome to the help page of Segmentron! Segmentron is a python library (<a href="https://test.pypi.org/project/Segmentron/">PyPI Link</a>) developed by the <a href="https://cims.nyu.edu/~regev/" target = "_blank"> Regev Lab</a> at NYU in collaboration with the <a href="https://med.nyu.edu/research/boeke-lab/" target = "_blank">Boeke Lab</a> at NYU Langone for calculating the optimal segmentation of DNA for synthesis by yeast.
+Users are able to adjust what parameters are considered in the segmentation process accoridng to their needs.
     </p>
-    <h2>Table of Contents</h2>
-    <ul class = "contentTable">
-        <li><a href="#sequence">Sequence File Formatting</a></li>
-        <li><a href="#runtime">Segmentation Calculation</a></li>
-        <li><a href="#output">Segmentation Output</a></li>
-        <li><a href="#faq">Frequently Asked Questions</a></li>
-    </ul>
+    <div id = "table-of-contents">
+        <h2>Table of Contents</h2>
+        <ul class = "contentTable">
+            <li><a href="#sequence">Sequence File Formatting</a></li>
+            <li><a href="#output">Segmentation Output</a></li>
+            <li><a href="#runtime">Segmentation Calculation</a></li>
+            <li><a href="#faq">Frequently Asked Questions</a></li>
+        </ul>
+    </div>
+
 
     <!-- Add your help content here -->
     <div id = "sequence">
         <h2>Sequence File Formatting</h2>
+
         <h3>Snapgene Files (.dna)</h2>
+        <p>Example Snapgene Input: <a href="examples/input/HLA2_Sergio_Test.dna" download>HLA2_Sergio_test.dna</a></p>
         <h3>Text Files (.txt)</h2>
-        <h3>FASTA Files (.fasta)</h2>
-        <h3>FASTQ Files (.fastq)</h2>
-    </div>
-    <div id = "runtime">
-        <h2>Segmentation Calculation</h2>
-        <p>The process may take long, so please be patient! To learn more about Segmentron and how it works please visit our <a href="./about">about page</a>.</p>
+        <p> Have the DNA sequence written in Nucleotides ATCG.</p>
+        <p>  Example Text Input: <a href="examples/input/HLA2_Sergio_Test.txt" download>HLA2_Sergio_test.txt</a></p>
+        <h3>FASTA Files (.fa, .fasta)</h2>
+        <p>Example FASTA Input: <a href="examples/input/HLA2_Sergio_Test.fa" download>HLA2_Sergio_test.fa</a> </p>
     </div>
     <div id = "output">
         <h2>Segmentation Output</h2>
+        <h3>Text Output (.txt)</h2>
+        <p>The text output conists of the range of indicies [start, end] from the original sequence that each segment contains as well as the nucleotides themselves. These segments have the overlap included and can be used to produce the segments directly.</p>
+        <p>Example Text Output: <a href="examples/output/HLA2_Sergio_Test_segmentation_results_txt.txt" download>HLA2_Sergio_Test_segmentation_results_txt.txt</a> 
+        </p>
+        <h3>Bed Output (.bed)</h2>
+        <p>This .bed output consists of the indices of each segment. When opened in snapgene alongisde the original DNA sequence one can observe the segmentation</p>
+        <p>Example Bed Output: <a href="examples/output/HLA2_Sergio_Test_segmentation_results_bed.bed" download>HLA2_Sergio_Test_segmentation_results_bed.bed</a> 
+        <h3>Bed + Forbidden Regions Output (.bed)</h2>
+        <p>The .bed output including forbidden regions consists of the indices of each segment as well as the indices of all the forbidden regions that were incorporated into the calculation. When opened in snapgene alongisde the original DNA sequence one can observe the segmentation as well as user-specified and generated forbidden regions</p>
+
+        <p>Example Bed + Forbidden Regions Output: <a href="examples/output/HLA2_Sergio_Test_segmentation_results_bedFR.bed" download>HLA2_Sergio_Test_segmentation_results_bedFR.bed</a> 
         <p>There are three different outputs</p>
+    </div>
+    <div id = "runtime">
+        <h2>Segmentation Calculation</h2>
+        <p>The process may take long, so please be patient!</p>
+        <h3>Segmentron</h3>
+        <p>We have developed a Python library called <a href="https://test.pypi.org/project/Segmentron/">Segmentron</a> which provides an API for users to segment given a target DNA Sequence and a variety of parameters.
+            We utilize <a href="https://pyodide.org/">Pyodide</a> to compile and run Python code into Web Assembly
+        </p>
+        <h3>BLAST</h3>
+        <p>To run NIH's <a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi">BLAST</a>  we create utilize a <a href="https://github.com/copy/v86">v86</a> container to run a Debian Disk Image with a precompiled version of BLAST.</p>
+        <h3>WebWorker</h3>
+        <p>We utilize a WebWorker which is a Javascript Script which runs in the background. This enables the UI on the main thread to be interactive whilst we are running intensive computations like Segmentron or BLAST.
+        </p>
+
+
     </div>
     <div id = "faq">
         <h2>Frequently Asked Questions</h2>
     </div>
 </div>
 </body>
-
+<footer>
+    <a href="https://cims.nyu.edu/~regev/" target = "_blank"> Regev Lab</a> | <a href="https://med.nyu.edu/research/boeke-lab/" target = "_blank">Boeke Lab</a>
+</footer>
 </html>

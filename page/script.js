@@ -32,9 +32,14 @@ worker.onmessage = function(event){
             console.log("Message From Worker: ", results["msg"]);
             const progressMsg = document.getElementById("progressMsg")
             progressMsg.value += `\n${results["msg"]}\n`;
+            /*await new Promise(resolve => setTimeout(resolve, 1000));
+            progressMsg.scroll({
+                top: progressMsg.scrollHeight,
+                behavior: 'smooth'
+            });*/
             if(results["msg"].indexOf("This function")==0){
                 setLoadingProgress(totalLen, totalLen);
-                document.getElementById('loadingBar').style.backgroundColor = '#007bff';
+                document.getElementById('loadingBar').classList.add("finished");
             }
         }
     }
@@ -205,7 +210,8 @@ function segment(event){
         document.getElementById("progressMsg").value = "Progress:";
         var loadingBar = document.getElementById('loadingBar');
         loadingBar.style.width = '0%';
-        document.getElementById('percentText').innerHTML = `0%`;
+        document.getElementById('loadingBar').classList.remove("finished");
+        document.getElementById('percentText').innerHTML = '0%';
         document.getElementById('progressText').innerHTML = '';
         segmentFile();
     } else {
