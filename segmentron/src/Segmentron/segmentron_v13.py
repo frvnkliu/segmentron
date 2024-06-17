@@ -318,12 +318,11 @@ class segmentron:
                     region_type = "Generated"
                     forbidden_region = forbidden_regions[i]
                     for specified_forbidden_region in self.parameters.get("specified_forbidden_regions", []):
-                        #If a specified forbidden region is included, check if they are identical or it is a subregion
-                        if (specified_forbidden_region[0] >= forbidden_region[0]):
-                            if (specified_forbidden_region[0] == forbidden_region[0]) and (specified_forbidden_region[1] == forbidden_region[1]):
-                                #If the regions are identical, the region was specified
-                                region_type = "Specified"
-                                break
+                        #Check if any forbidden regions are identical to those that were specified in the file
+                        if (specified_forbidden_region[0] == forbidden_region[0]) and (specified_forbidden_region[1] == forbidden_region[1]):
+                            #If the regions are identical, the region was specified
+                            region_type = "Specified"
+                            break
                     #Write segments to the bed file
                     f.write(f"0\t{forbidden_regions[i][0]}\t{forbidden_regions[i][1]}\t{region_type} Forbidden Region {i + 1}\t0\t.\t0\t0\t255,0,0\n")
                 else:
