@@ -117,7 +117,7 @@ def verbose(i, total_length):
 
 start_time = time.time()
 segment_scoring_functions = [scoring_length.length_score, scoring_forbidden_regions.forbidden_region_score,${param["GCCount"]?"scoring_overlap_composition.overlap_composition_score,":""} scoring_forbidden_regions.forbidden_region_class_score, scoring_microhomologies.microhomology_score]
-preprocessing_functions = [scoring_forbidden_regions.forbidden_regions, ${param["GCCount"]?"scoring_overlap_composition.GC_proportions":""}, scoring_microhomologies.relevant_microhomologies]
+preprocessing_functions = [scoring_forbidden_regions.forbidden_regions, ${param["GCCount"]?"scoring_overlap_composition.GC_proportions,":""} scoring_microhomologies.relevant_microhomologies]
 parameters = {
                 "max_length" : ${param["maxLen"]},
                 "min_length" : ${param["minLen"]},
