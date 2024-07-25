@@ -187,7 +187,7 @@ with open("/temp.fa", "w") as f:
             }
           }
       });
-      emulator.serial0_send("blastn -query temp.fa -subject temp.fa -out output.xml -outfmt 5 -gapopen 5 -gapextend 5 -perc_identity 80 -strand both -word_size 20\n");
+      emulator.serial0_send("blastn -query temp.fa -subject temp.fa -out output.xml -outfmt 5 -gapopen 5 -gapextend 5 -perc_identity 80 -strand both -word_size 20 -dust no\n");
     }else{
       runPython(python);
     }
